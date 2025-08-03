@@ -1,0 +1,35 @@
+TRIFAN BOGDAN-CRISTIAN , 312CD
+
+STRUCTURI DE DATE
+
+    Pentru banda, voi avea nevoie de un tip de date pe care va retine o lista dublu inlantuita cu urmatoarele noduri : inceput, final, santinela(care este inaintea inceputului), si deget (unde indica degetul). 
+    Am nevoie de o lista dublu inlantuita pe care o voi trata drept o coada si care va retine comenzile de tip UPDATE.
+    O sa imi trebuiasca si doua liste dublu inlantuite, pe care le vad ca doua stive, si vor contine doar comenzile : MOVE_LEFT si MOVE_RIGHT. Daca elimin din varful uneia, voi adauga musai in varful celeilalte, iar operatiile pe care le fac pentru cele doua comenzi sunt 'simetrice' / 'opuse'.
+    Coada si stivele vor fi deci liste dublu inlantuie :
+        - pentru coada (FIFO = First In First Out), vom face operatia de inserare la final, si pe cea de stergere la inceput
+        - coada (LIFO = Last In First Out), vom face ambele operatii de la nodul de inceput al listei.
+
+CITIRE
+
+    Pe masura ce citim din fisier , copiem fiecare linie pentru a o prelucra folosind functia strstr pentru a cauta un sir (comanda) in alt sir (linia citita din fisier).
+
+UPDATE - EXECUTE    
+
+    Daca primul cuvant al liniei face parte din urmatoarele : MOVE_LEFT , MOVE_RIGHT , MOVE_LEFT_CHAR , MOVE_RIGHT_CHAR , WRITE , INSERT_LEFT , INSERT_RIGHT ; atunci linia citita devine un element nou al unei cozii.
+    Daca primul cuvant al liniei este EXECUTE , verifam daca lista este vida, iar daca nu este, retinem 'comanda' pe care o memoreaza si ii stergem elementul din stanga. Vom aplica din nou strtok pentru a afla exact ce 'comanda' realizam. Mai degraba folosim strtok - ul pentru ca daca este nevoie sa suprascriem elementul catre care degetul indica (l-am notat in cazul meu cu 'santinel') sau sa inseram un nou nod, ne trebuie se string - ul de dupa spatiu.
+
+UNDO - REDO
+
+    Pentru fiecare dintre aceste operatii vom avea nevoie de o stiva.
+    Vorbind din nou de citirea din fisier, la care mai am de adaugat faptul ca atunci cand linia citita coincide fie cu MOVE_LEFT, fie cu MOVE_RIGTH, atunci adauga linia in varful stivei asociata operatiei de UNDO.
+    Daca citim si intalnim sirul 'UNDO' pe o linie, tot ce avem de facut este sa extragem varful stivei lui UNDO, sa executam opusul comenzii, sa adaugam in varful stivei lui REDO comanda si sa o eliminam din UNDO. Noi practic transvazam o comanda dintr - o stiva intr - alta si executam opusul comenzii respective, adica daca varful lui UNDO memora MOVE_LEFT, vom merge cu degetul la dreapta, iar pentru MOVE_RIGHT, degetul va fi 'shiftat' o pozitie la stanga. De aceea i se spune si UNDO, pentru ca anuleaza o comanda, mai precis ultima intampinata.
+    Daca intalnim 'REDO', facem cam aceeasi poveste ca la 'UNDO', doar ca invers : executam cu exactitate comanda din varful stivei lui UNDO (MOVE_LEFT -> mutam degetul , adica banda_merge->santinela, in stanga ; MOVE_RIGHT -> mutam degetul in dreapta) , inseram in varful stivei lui UNDO comanda, si o eleminam din varful lui REDO.
+
+AFISARE   
+
+    Inainte sa executam comenzile de MOVE_LEFT si MOVE_RIGHT, vom punem 'pozitia' (pointerul) degetului in stiva pentru UNDO. Cand citim din fisier sirul de caractere "UNDO", vom pune pozitia curenta degetului in stiva de REDO, iar degetul va deveni varful stivei UNDO. Urneaza sa eliminam varful stivei UNDO.
+    Pentru stiva de REDO, asa cum ii poarta si numele, trebuie sa restituim pozitia degetului, asa cum era inainte de ultimul UNDO : cand citim din fisier sirul de caractere "REDO", vom pune pozitia curenta degetului in stiva de UNDO, iar degetul va deveni varful stivei REDO. Urneaza sa eliminam varful stivei REDO. Este cam fix invers cum era pentru UNDO.
+
+
+Pe local, am obtinut punctajul de 120 de puncte.
+Initial, la data de  2023.04.02 19:08:48, am incarcat solutia temei cu punctajul maxim pe VMcheck - erul grupei CB, in loc de CD...
