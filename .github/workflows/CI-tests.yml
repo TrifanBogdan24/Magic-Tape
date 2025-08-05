@@ -53,11 +53,17 @@ jobs:
           sudo apt update
           sudo apt install -y python3 valgrind
       
-      - name: Run checker tests
+      - name: Run tests on implementation
         working-directory: ./tests
         run: |
           chmod +x checker.sh
           ./checker.sh  2>&1 | tee test_results.txt
+      
+      - name: Run coding style cheker
+        working-directory: ./tests
+        run: |
+          chmod +x coding-style/cs.sh
+          coding-style/./cs.sh ../src/ 2>&1 | tee coding_style.txt
       
       - name: Upload test logs as artifacts
         if: always()
@@ -66,4 +72,5 @@ jobs:
           name: checker-logs
           path: |
             tests/test_results.txt
+            tests/coding_style.txt
           retention-days: 5
