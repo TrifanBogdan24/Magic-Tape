@@ -2,7 +2,17 @@ name: Run Checker Tests
 
 
 run-name: >
-  ${{ github.event_name == 'schedule' && '🌃 Running Overnight Tests' || '🔁 Running CI tests on push or PR' }}
+  ${{ github.event_name == 'schedule'
+      && '🌃 Running Overnight Tests'
+      || (
+        github.event_name == 'push'
+        && format(github.event.head_commit.message)
+        || (
+          github.event_name == 'pull_request'
+          && format(github.event.pull_request.title)
+        )
+      )
+  }}
 
 on:
   push:
@@ -32,7 +42,7 @@ jobs:
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             echo "🌃 Running Overnight Tests"
           else
-            echo "🔁 Running CI tests on push or PR"
+            echo "🔁 Running CI tests on push/PR"
           fi
 
       - name: Checkout repository
