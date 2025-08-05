@@ -1,10 +1,20 @@
 name: Run Checker Tests
 
+
+run-name: >
+  ${{ github.event_name == 'schedule' && '🌃 Running Overnight Tests' || '🔁 Running CI tests on push or PR' }}
+
 on:
   push:
     branches: main
   pull_request:
     branches: main
+
+  schedule:
+    # Overnight: run tests every day at 21:30 UTC
+    # Usage: cron <minute> <hour> <day-of-month> <day-of-week (sunday=0)>
+    - cron: "30 21 * * *"
+
 
 concurrency:
   # cancels the previous in-flight run in this group
@@ -17,6 +27,14 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
+      - name: Display job purpose
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            echo "🌃 Running Overnight Tests"
+          else
+            echo "🔁 Running CI tests on push or PR"
+          fi
+
       - name: Checkout repository
         uses: actions/checkout@v3
       
