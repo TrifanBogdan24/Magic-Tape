@@ -1,0 +1,41 @@
+name: Run Checker Tests
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: main
+
+concurrency:
+  # cancels the previous in-flight run in this group
+  group: testing-${{ github.ref }}
+  cancel-in-progress: true
+
+
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: "Install dependencies: (valgrind)"
+        run: |
+          sudo apt update
+          sudo apt install -y python3 valgrind
+      
+      - name: Run checker tests
+        working-directory: ./tests
+        run: |
+          chmod +x checker.sh
+          ./checker.sh  2>&1 | tee checker/test_results.txt
+      
+      - name: Upload test logs as artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checker-logs
+          path: |
+            checker/test_results.txt
+          retention-days: 5
