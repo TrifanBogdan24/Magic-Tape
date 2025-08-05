@@ -4,6 +4,63 @@
 #include <string.h>
 #include "tema-1.h"
 
+
+void exec_operation(FILE* fout, Coada* coada, LBanda* banda, SStiva* undo, SStiva* redo) {
+    if (coada->inceput == NULL) return;
+
+    char cmd_to_exec[LUNGIME_LINII];
+    strcpy(cmd_to_exec, coada->inceput->informatie);
+    CoadaDeleteFirstNode(coada);
+
+    if (strstr(cmd_to_exec, UPDATE_WRITE_C)) {
+        banda->deget->caracter = cmd_to_exec[POZ_WRITE_C];
+        while (*undo) StivaPop(undo);
+        while (*redo) StivaPop(redo);
+
+    } else if (strstr(cmd_to_exec, UPDATE_MV_L_C)) {
+        NodBanda* aux = banda->deget;
+        while (aux) {
+            if (cmd_to_exec[POZ_MV_L_C] == aux->caracter) {
+                banda->deget = aux;
+                return;
+            }
+            aux = aux->pred;
+        }
+        fprintf(fout, "%s\n", EROARE);
+
+    } else if (strstr(cmd_to_exec, UPDATE_MV_R_C)) {
+        while (banda->deget && banda->deget->caracter != cmd_to_exec[POZ_MV_R_C]) {
+            banda->deget = banda->deget->urm;
+        }
+        if (!banda->deget) {
+            BandaInserareFinal(banda, DIEZ);
+            banda->deget = banda->final;
+        }
+
+    } else if (strstr(cmd_to_exec, UPDATE_INSERT_L_C)) {
+        BandaInserareStanga(fout, banda, cmd_to_exec[POZ_INSERT_L_C]);
+
+    } else if (strstr(cmd_to_exec, UPDATE_INSERT_R_C)) {
+        BandaInserareDreapta(banda, cmd_to_exec[POZ_INSERT_R_C]);
+
+    } else if (strstr(cmd_to_exec, UPDATE_MV_L)) {
+        if (banda->deget != banda->inceput) {
+            StivaPush(undo, banda->deget);
+            banda->deget = banda->deget->pred;
+        }
+
+    } else if (strstr(cmd_to_exec, UPDATE_MV_R)) {
+        StivaPush(undo, banda->deget);
+        if (banda->deget == banda->final) {
+            BandaInserareFinal(banda, DIEZ);
+            banda->deget = banda->final;
+        } else {
+            banda->deget = banda->deget->urm;
+        }
+    }
+}
+
+
 int main()
 {
     int nr = ZERO;
@@ -52,84 +109,7 @@ int main()
         } else if( strstr(linie , UPDATE_WRITE_C) != NULL) {
             CoadaInserareFinal( coada_execute_update , linie);
         } else if (strstr(linie , EXECUTE) != NULL) {
-            if (coada_execute_update->inceput == NULL) {
-                // Nu avem ce executa
-                continue;
-            }
-                
-            // executia efectiva a operatiilor memorate
-            char cmd_to_exec[LUNGIME_LINII] ;
-            strcpy(cmd_to_exec , coada_execute_update->inceput->informatie);
-            CoadaDeleteFirstNode(coada_execute_update);
-
-            if (strstr(cmd_to_exec , UPDATE_WRITE_C) != NULL) {
-                // modificam santinela
-                banda_merge->deget->caracter = cmd_to_exec[POZ_WRITE_C];
-
-                while (undo_stiva != NULL) {
-                    StivaPop(&undo_stiva);  
-                }
-                
-                while (redo_stiva!= NULL) {
-                    StivaPop(&redo_stiva);
-                }
-            } else if (strstr(cmd_to_exec , UPDATE_MV_L_C) != NULL) {
-                // cautam caracterul in stanga degetului
-                NodBanda* aux = banda_merge->deget;
-                
-                while (aux != NULL) {
-                    if (cmd_to_exec[POZ_MV_L_C] == aux->caracter) {
-                        banda_merge->deget = aux;
-                        break;
-                    }
-                    aux = aux->pred;
-                }
-                
-                if (aux==NULL) {
-                    // afisam eroarea 
-                    free(aux);
-                    fprintf(fout, "%s\n" , EROARE);
-                }
-                
-
-            } else if (strstr(cmd_to_exec, UPDATE_MV_R_C) != NULL) {
-                // printf("Cautam in dreapta %s\n", caracter);
-                while (banda_merge->deget != NULL && banda_merge->deget->caracter != cmd_to_exec[POZ_MV_R_C]) {
-                    banda_merge->deget = banda_merge->deget->urm;
-                }
-                if (banda_merge->deget==NULL) {
-                    BandaInserareFinal(banda_merge, DIEZ);
-                    banda_merge->deget = banda_merge->final;
-                        
-                } 
-            } else if (strstr(cmd_to_exec , UPDATE_INSERT_L_C) != NULL) {
-                // inserarea unui caracter la stanga si modificarea santinelei
-                BandaInserareStanga(fout , banda_merge , cmd_to_exec[POZ_INSERT_L_C]);
-                    
-            } else if (strstr(cmd_to_exec , UPDATE_INSERT_R_C) != NULL) {
-                // inserarea unui caracter in dreapta santinelei si modificarea santinelei
-                BandaInserareDreapta(banda_merge , cmd_to_exec[POZ_INSERT_R_C]);
-            } else if (strstr(cmd_to_exec , UPDATE_MV_L) != NULL) {
-                // mutam degetul in stanga
-                if (banda_merge->deget != banda_merge->inceput) {
-                    
-                    StivaPush(&undo_stiva , banda_merge->deget);
-                    banda_merge->deget = banda_merge->deget->pred;
-                    
-                }
-                
-            } else if (strstr(cmd_to_exec , UPDATE_MV_R) != NULL) {
-                StivaPush(&undo_stiva , banda_merge->deget);
-
-                if (banda_merge->deget == banda_merge->final) {
-                    // inseram la final                      
-                    BandaInserareFinal(banda_merge , DIEZ);
-                    banda_merge->deget = banda_merge->final;
-
-                } else {
-                    banda_merge->deget= banda_merge->deget->urm;
-                }
-            }
+            exec_operation(fout, coada_execute_update, banda_merge, &undo_stiva, &redo_stiva);
         }
     }
 
