@@ -29,7 +29,7 @@ jobs:
         working-directory: ./tests
         run: |
           chmod +x checker.sh
-          ./checker.sh  2>&1 | tee checker/test_results.txt
+          ./checker.sh  2>&1 | tee test_results.txt
       
       - name: Upload test logs as artifacts
         if: always()
@@ -37,5 +37,5 @@ jobs:
         with:
           name: checker-logs
           path: |
-            checker/test_results.txt
+            tests/test_results.txt
           retention-days: 5
