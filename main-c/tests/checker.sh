@@ -47,7 +47,7 @@ function valgrindTest() {
 }
 
 function testInput() {
-    cat Teste/Input/test$1.in > tema1.in
+    cat ../tests/Tests/Input/test$1.in > tema1.in
     ./tema1 
 
     if [ "$?" -eq 139 ]
@@ -56,7 +56,7 @@ function testInput() {
             return
     fi
 
-    diff Teste/Output/test$1.out tema1.out > /dev/null 2>&1
+    diff ../tests/Tests/Output/test$1.out tema1.out > /dev/null 2>&1
     if [ "$?" -ne 0 ]
         then
             echo "test$1.in: 0/${POINTS[$1-1]}"
@@ -95,5 +95,8 @@ function main() {
     let VALGRINDTEST=$VALGRINDTEST*20/30
     echo "Valgrind: $VALGRINDTEST/20"
 }
+
+cd ../src
 makeCommand
 checkExe
+cd ..
