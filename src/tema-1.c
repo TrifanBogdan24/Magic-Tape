@@ -5,55 +5,57 @@
 #include "tema-1.h"
 
 
-void exec_operation(FILE* fout, Coada *coada, LBanda *banda, SStiva *undo, SStiva *redo)
+void exec_operation(FILE* fout, Queue *coada, Banda *banda, Stack *undo, Stack *redo)
 {
     if (coada->head == NULL) return;
 
-    char cmd_to_exec[LUNGIME_LINIE];
+    char cmd_to_exec[LINE_LENGTH];
     strcpy(cmd_to_exec, coada->head->informatie);
     queue_pop(coada);
 
     if (strstr(cmd_to_exec, WRITE_CHAR)) {
-        banda->deget->caracter = cmd_to_exec[POZ_WRITE_C];
+        int idx = strlen(WRITE_CHAR) + 1;
+
+        banda->deget->caracter = cmd_to_exec[idx];
         while (*undo) stack_pop(undo);
         while (*redo) stack_pop(redo);
-
     } else if (strstr(cmd_to_exec, MOVE_LEFT_CHAR)) {
+        int idx = strlen(MOVE_LEFT_CHAR) + 1;
+
         NodBanda* aux = banda->deget;
         while (aux) {
-            if (cmd_to_exec[POZ_MV_L_C] == aux->caracter) {
+            if (cmd_to_exec[idx] == aux->caracter) {
                 banda->deget = aux;
                 return;
             }
             aux = aux->pred;
         }
-        fprintf(fout, "%s\n", EROARE);
-
+        fprintf(fout, "%s\n", ERROR);
     } else if (strstr(cmd_to_exec, MOVE_RIGHT_CHAR)) {
-        while (banda->deget && banda->deget->caracter != cmd_to_exec[POZ_MV_R_C]) {
+        int idx = strlen(MOVE_RIGHT_CHAR) + 1;
+
+        while (banda->deget && banda->deget->caracter != cmd_to_exec[idx]) {
             banda->deget = banda->deget->urm;
         }
         if (!banda->deget) {
-            banda_insert_to_tail(banda, DIEZ);
+            banda_insert_to_tail(banda, DIEZ_CHAR);
             banda->deget = banda->tail;
         }
-
     } else if (strstr(cmd_to_exec, INSERT_CHAR_TO_LEFT)) {
-        banda_insert_to_left(fout, banda, cmd_to_exec[POZ_INSERT_L_C]);
-
+        int idx = strlen(INSERT_CHAR_TO_LEFT) + 1;
+        banda_insert_to_left(fout, banda, cmd_to_exec[idx]);
     } else if (strstr(cmd_to_exec, INSERT_CHAR_TO_RIGHT)) {
-        banda_insert_to_right(banda, cmd_to_exec[POZ_INSERT_R_C]);
-
+        int idx = strlen(INSERT_CHAR_TO_RIGHT) + 1;
+        banda_insert_to_right(banda, cmd_to_exec[idx]);
     } else if (strstr(cmd_to_exec, MOVE_LEFT)) {
         if (banda->deget != banda->head) {
             stack_push(undo, banda->deget);
             banda->deget = banda->deget->pred;
         }
-
     } else if (strstr(cmd_to_exec, MOVE_RIGHT)) {
         stack_push(undo, banda->deget);
         if (banda->deget == banda->tail) {
-            banda_insert_to_tail(banda, DIEZ);
+            banda_insert_to_tail(banda, DIEZ_CHAR);
             banda->deget = banda->tail;
         } else {
             banda->deget = banda->deget->urm;
@@ -64,68 +66,68 @@ void exec_operation(FILE* fout, Coada *coada, LBanda *banda, SStiva *undo, SStiv
 
 int main()
 {
-    int nr = ZERO;
-    Coada* coada_execute_update = new_queue();    // retine numele functii
-    SStiva undo_stiva = (SStiva) calloc(1, sizeof(NodStiva));               // retine numele functiei
-    SStiva redo_stiva = (SStiva) calloc(1, sizeof(NodStiva));              // retine numele functiei
-    LBanda* banda_merge = new_banda();   // retine banda 
+    Banda* banda = new_banda();
+    Queue* queue_execute_update = new_queue();
+    Stack stack_undo = (Stack) calloc(1, sizeof(StackNode));
+    Stack stack_redo = (Stack) calloc(1, sizeof(StackNode));
 
     FILE *fin = fopen("tema1.in" , "r");
     FILE *fout= fopen("tema1.out" , "w");
-    fscanf(fin, "%d", &nr);
 
-    char  linie[LUNGIME_LINIE];
-    int i = ZERO;
-    for (i = ZERO ; i <= nr ; i++) {
-        fgets(linie, LUNGIME_LINIE , fin);
+    int num_operations = 0;
+    fscanf(fin, "%d", &num_operations);
+    char line[LINE_LENGTH];
 
-        if (strstr(linie , MOVE_RIGHT_CHAR) != NULL) {
-            queue_push(coada_execute_update , linie);
-        } else if (strstr(linie ,  MOVE_LEFT_CHAR) != NULL) {
-            queue_push(coada_execute_update , linie);
-        } else if (strstr(linie , MOVE_RIGHT) != NULL) {
-            queue_push(coada_execute_update , linie);
-        } else if (strstr(linie , MOVE_LEFT) != NULL) {
-            queue_push(coada_execute_update , linie);
-        } else if (strstr(linie , INSERT_CHAR_TO_LEFT) != NULL) {
-            queue_push(coada_execute_update , linie);
-        } else if (strstr(linie , INSERT_CHAR_TO_RIGHT) != NULL) {
-            queue_push(coada_execute_update , linie);
-        } else if (strstr(linie , SHOW_CURRENT) != NULL) {
-            fprintf(fout , "%c\n" , banda_merge->deget->caracter);
-        } else if (strstr(linie , SHOW_ALL) != NULL) {
-            print_banda(fout , banda_merge);
-        } else if (strstr(linie , UNDO) != NULL ) {
-            if( undo_stiva != NULL && undo_stiva->informatie != NULL) {
-                stack_push(&redo_stiva , banda_merge->deget); // punem in varful stivei REDO varful lui UNDO
-                banda_merge->deget = undo_stiva->informatie;    // extragem pointerul din varful stivei UNDO
-                stack_pop(&undo_stiva);  // stergem varful stivei UNDO
+    for (int i = 0; i <= num_operations; i++) {
+        fgets(line, LINE_LENGTH , fin);
+
+        if (strstr(line , MOVE_RIGHT_CHAR) != NULL) {
+            queue_push(queue_execute_update , line);
+        } else if (strstr(line ,  MOVE_LEFT_CHAR) != NULL) {
+            queue_push(queue_execute_update , line);
+        } else if (strstr(line , MOVE_RIGHT) != NULL) {
+            queue_push(queue_execute_update , line);
+        } else if (strstr(line , MOVE_LEFT) != NULL) {
+            queue_push(queue_execute_update , line);
+        } else if (strstr(line , INSERT_CHAR_TO_LEFT) != NULL) {
+            queue_push(queue_execute_update , line);
+        } else if (strstr(line , INSERT_CHAR_TO_RIGHT) != NULL) {
+            queue_push(queue_execute_update , line);
+        } else if (strstr(line , SHOW_CURRENT) != NULL) {
+            fprintf(fout , "%c\n" , banda->deget->caracter);
+        } else if (strstr(line , SHOW_ALL) != NULL) {
+            print_banda(fout , banda);
+        } else if (strstr(line , UNDO) != NULL ) {
+            if( stack_undo != NULL && stack_undo->informatie != NULL) {
+                stack_push(&stack_redo , banda->deget);   // punem in varful stivei REDO varful lui UNDO
+                banda->deget = stack_undo->informatie;    // extragem pointerul din varful stivei UNDO
+                stack_pop(&stack_undo);                   // stergem varful stivei UNDO
             }
-        } else if (strstr(linie , REDO) != NULL ) {
-            if (redo_stiva != NULL && redo_stiva->informatie != NULL) {
-                stack_push(&undo_stiva , banda_merge->deget);     // punem in varful stivei UNDO varful lui REDO
-                banda_merge->deget = redo_stiva->informatie;  // extragem pointerul din varful stivei REDO
-                stack_pop(&redo_stiva);  // stergem varful stivei REDO
+        } else if (strstr(line , REDO) != NULL ) {
+            if (stack_redo != NULL && stack_redo->informatie != NULL) {
+                stack_push(&stack_undo , banda->deget);    // punem in varful stivei UNDO varful lui REDO
+                banda->deget = stack_redo->informatie;     // extragem pointerul din varful stivei REDO
+                stack_pop(&stack_redo);                    // stergem varful stivei REDO
             }
-        } else if( strstr(linie , WRITE_CHAR) != NULL) {
-            queue_push( coada_execute_update , linie);
-        } else if (strstr(linie , EXECUTE) != NULL) {
-            exec_operation(fout, coada_execute_update, banda_merge, &undo_stiva, &redo_stiva);
+        } else if( strstr(line , WRITE_CHAR) != NULL) {
+            queue_push( queue_execute_update , line);
+        } else if (strstr(line , EXECUTE) != NULL) {
+            exec_operation(fout, queue_execute_update, banda, &stack_undo, &stack_redo);
         }
     }
 
-    delete_banda(banda_merge);
-    delete_queue(coada_execute_update);
+    delete_banda(banda);
+    delete_queue(queue_execute_update);
 
-    while (undo_stiva != NULL) {
-        stack_pop(&undo_stiva);  
+    while (stack_undo != NULL) {
+        stack_pop(&stack_undo);  
     }
-    while (redo_stiva!= NULL) {
-        stack_pop(&redo_stiva);
+    while (stack_redo!= NULL) {
+        stack_pop(&stack_redo);
     }
 
-    free(undo_stiva);
-    free(redo_stiva);
+    free(stack_undo);
+    free(stack_redo);
 
     fclose(fin);
     fclose(fout);

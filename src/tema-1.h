@@ -20,60 +20,51 @@
 #define UNDO "UNDO"
 #define REDO "REDO"
 
-#define DIEZ '#'
-#define SPACE ' '
-#define EROARE "ERROR"
-#define LUNGIME_LINIE 20
-#define POZ_WRITE_C 6
-#define POZ_MV_L_C 15
-#define POZ_MV_R_C 16
-#define POZ_INSERT_L_C 12
-#define POZ_INSERT_R_C 13
-#define UNU 1
-#define ZERO 0
-#define ZRC '0'
+#define DIEZ_CHAR '#'
+#define SPACE_CHAR ' '
+#define ERROR "ERROR"
+#define LINE_LENGTH 20
 
-int k = ZERO;
 
 typedef struct NodBanda {
     char caracter;
-    struct NodBanda *urm;    // adresa catre urmatorul nod din Coada
-    struct NodBanda *pred;   // adresa catre nodul anterior din Coada
+    struct NodBanda *urm;    // adresa catre urmatorul nod din coada (next)
+    struct NodBanda *pred;   // adresa catre nodul anterior din coada (previous)
 } NodBanda;
 
 
-typedef struct LBanda{
+typedef struct Banda{
     NodBanda *head;       // va memora nodul de inceput al listei
     NodBanda *tail;         // va memora nodul final al listei
     NodBanda *santinela;    // santinela, fundatia listei
     NodBanda *deget;         // va memora nodul catre care degetul indica
-} LBanda;
+} Banda;
 
 
-typedef struct Stiva {
-    struct Stiva *urm;
+typedef struct Stack {
+    struct Stack *urm;
     NodBanda *informatie;
-} NodStiva, *SStiva;
+} StackNode, *Stack;
 
 
-typedef struct NodCoada {
-    char informatie[LUNGIME_LINIE];
-    struct NodCoada* urm;    // adresa catre urmatorul nod din Coada
-    struct NodCoada* pred;   // adresa catre nodul anterior din Coada
-} NodCoada;
+typedef struct QueueNode {
+    char informatie[LINE_LENGTH];
+    struct QueueNode* urm;    // adresa catre urmatorul nod din coada (next)
+    struct QueueNode* pred;   // adresa catre nodul anterior din coada (previous)
+} QueueNode;
 
 
-typedef struct Coada {
-    NodCoada* head;       // va memora nodul de head al listei
-    NodCoada* tail;         // va memora nodul tail al listei
-} Coada;
+typedef struct Queue {
+    QueueNode* head;         // va memora nodul de inceput al listei
+    QueueNode* tail;         // va memora nodul de la sfarsitul listei
+} Queue;
 
 
 
-NodCoada *new_queue_node(char informatie[LUNGIME_LINIE])
+QueueNode *new_queue_node(char informatie[LINE_LENGTH])
 {
     // cream un nou nod
-    NodCoada* new_node = malloc(sizeof(NodCoada));
+    QueueNode* new_node = malloc(sizeof(QueueNode));
     new_node->urm = new_node->pred = NULL;
     strcpy(new_node->informatie, informatie);
    return new_node;
@@ -90,19 +81,19 @@ NodBanda *new_banda_node(char caracter)
 }
 
 
-LBanda* new_banda()
+Banda* new_banda()
 {
     // creem o banda cu santinela
-    LBanda *banda_noua = malloc(sizeof(LBanda));
-    banda_noua->head = banda_noua->tail = banda_noua->deget = new_banda_node(DIEZ);
-    banda_noua->santinela = new_banda_node(SPACE);
+    Banda *banda_noua = malloc(sizeof(Banda));
+    banda_noua->head = banda_noua->tail = banda_noua->deget = new_banda_node(DIEZ_CHAR);
+    banda_noua->santinela = new_banda_node(SPACE_CHAR);
     banda_noua->santinela->urm = banda_noua->head;
     banda_noua->head->pred = banda_noua->santinela;
     return banda_noua;
 }
 
 
-void delete_banda(LBanda *banda)
+void delete_banda(Banda *banda)
 {
     while (banda->tail != banda->santinela) {
         NodBanda* tmp = banda->tail;
@@ -114,17 +105,17 @@ void delete_banda(LBanda *banda)
 }
 
 
-void banda_insert_to_tail(LBanda *banda, char caracter)
+void banda_insert_to_tail(Banda *banda, char caracter)
 {
     if (!banda || !banda->head) {
-        // Coada vida, elementul va deveni primul nod al listei
+        // Queue vida, elementul va deveni primul nod al listei
         banda->head = banda->tail = new_banda_node(caracter);
         banda->santinela->urm = banda->head;
         banda->head->pred = banda->santinela;
         return;
     }
     
-    // Coada  cel putin un element
+    // Queue  cel putin un element
     NodBanda* nodul_final = new_banda_node(caracter);
     nodul_final->pred = banda->tail;
     banda->tail-> urm = nodul_final;
@@ -132,46 +123,47 @@ void banda_insert_to_tail(LBanda *banda, char caracter)
 }
 
 
-void banda_insert_to_left(FILE *fout, LBanda *banda, char caracter)
+void banda_insert_to_left(FILE *fout, Banda *banda, char caracter)
 {
     // inseram in stanga santinelei
     if (banda->deget == banda->head) {
-        // head de banda
-        fprintf(fout, "%s\n", EROARE);
-        return;
-    } else {
-        NodBanda* nod_inserare_st = new_banda_node(caracter);
-        nod_inserare_st->pred = banda->deget->pred;
-        nod_inserare_st->urm = banda->deget;
-        banda->deget->pred->urm = nod_inserare_st;
-        banda->deget->pred = nod_inserare_st;
-        banda->deget = nod_inserare_st;
+        // banda nu contine nicio informatie
+        fprintf(fout, "%s\n", ERROR);
         return;
     }
+
+    // Banda nevida
+    NodBanda* new_node = new_banda_node(caracter);
+    new_node->pred = banda->deget->pred;
+    new_node->urm = banda->deget;
+    banda->deget->pred->urm = new_node;
+    banda->deget->pred = new_node;
+    banda->deget = new_node;
 }
 
 
-void banda_insert_to_right(LBanda *banda, char caracter)
+void banda_insert_to_right(Banda *banda, char caracter)
 {
     // inseram in dreapta santinelei
     if (banda->deget == banda->tail) {
+        // banda nu contine nicio informatie
         // inseram la final de banda
         banda_insert_to_tail(banda , caracter);
         banda->deget = banda->tail; 
         return;
-    } else {
-        NodBanda* new_node = new_banda_node(caracter);
-        new_node->pred = banda->deget;
-        new_node->urm = banda->deget->urm;
-        banda->deget->urm->pred = new_node;
-        banda->deget->urm = new_node;
-        banda->deget = new_node;
-        return;
     }
+
+    // Banda nevida
+    NodBanda* new_node = new_banda_node(caracter);
+    new_node->pred = banda->deget;
+    new_node->urm = banda->deget->urm;
+    banda->deget->urm->pred = new_node;
+    banda->deget->urm = new_node;
+    banda->deget = new_node;
 }
 
 
-void print_banda(FILE *fout, LBanda *banda)
+void print_banda(FILE *fout, Banda *banda)
 {
     for (NodBanda* iter = banda->head; iter; iter = iter->urm) {
         if (iter == banda->deget) {
@@ -185,59 +177,59 @@ void print_banda(FILE *fout, LBanda *banda)
 
 
 
-Coada* new_queue()
+Queue* new_queue()
 {
-	// cream o Coada noua
-	Coada* coada_noua = malloc(sizeof(Coada));
-	coada_noua->head = NULL;
-	coada_noua->tail = NULL;
-	return coada_noua;
+	// cream o coada noua
+	Queue* queue = malloc(sizeof(Queue));
+	queue->head = NULL;
+	queue->tail = NULL;
+	return queue;
 }
 
 
-void queue_push(Coada* queue, char informatie[LUNGIME_LINIE])
+void queue_push(Queue *queue, char informatie[LINE_LENGTH])
 {
     if (!queue) {
-        // Coada este vida
+        // coada este vida
         queue = new_queue();
         queue->head =  queue->tail = new_queue_node(informatie);
         return;
     } 
     if (queue && !queue->head) {
-        // Coada nu este initializata, ea exista, dar nu retine nimic
+        // coada nu este initializata, ea exista, dar nu retine nimic
         queue->head = queue->tail = new_queue_node(informatie);
         return;
     }
-    // Coada are cel putin un element
-    NodCoada* new_nod = new_queue_node(informatie);
+    // coada are cel putin un element
+    QueueNode* new_nod = new_queue_node(informatie);
     new_nod->pred = queue->tail;
     queue->tail->urm = new_nod;
     queue->tail = new_nod;
 }
 
 
-void queue_pop(Coada *queue)
+void queue_pop(Queue *queue)
 {
-    // sterge orimul element al listei , dar nu si Coada
-    NodCoada* stergator = queue->head;
+    // sterge primul element al coada, dar nu si coada in sine
+    QueueNode* tmp = queue->head;
     queue->head = queue->head->urm;
     if (queue->head) {
         queue->head->pred = NULL;
     }
-    free(stergator);
+    free(tmp);
 }
 
 
-void CoadaDeleteLastnod(Coada *queue)
+void QueueDeleteLastnod(Queue *queue)
 {
     if (!queue) return;
     if (queue->head == queue->tail) {
-        // Coada are un singur element
+        // coada are un singur element
         free(queue->head);
         free(queue->tail);
         return;
     } else {
-        // Coada are mai multe elemente
+        // coada are mai multe elemente
         queue->tail = queue->tail->pred;
         free(queue->tail->urm);
         return;
@@ -245,16 +237,16 @@ void CoadaDeleteLastnod(Coada *queue)
 }
 
 
-void delete_queue(Coada *queue)
+void delete_queue(Queue *queue)
 {
 	// Guard against young player errors
 	if (!queue) {
         free(queue);
         return;
     }
-	while (queue->head) {
-		// stergem succeiv primul element al listei
-		// o privim practic asemenea unei cozi
+
+    // stergem succeiv primul element al listei
+    while (queue->head) {
         // stergere de la inceput
 		queue_pop(queue);
 	}
@@ -263,26 +255,27 @@ void delete_queue(Coada *queue)
 
 
 
-void stack_push(SStiva *stiva, NodBanda *varf_nou)
+void stack_push(Stack *stack, NodBanda *new_top)
 {
-    SStiva stiva_noua = (SStiva) malloc(sizeof(NodStiva));
-    stiva_noua->informatie = varf_nou;
-    stiva_noua->urm = *stiva;
-    *stiva = stiva_noua;
+    Stack new_stack = (Stack) malloc(sizeof(StackNode));
+    new_stack->informatie = new_top;
+    new_stack->urm = *stack;
+    *stack = new_stack;
 }
 
 
-void stack_pop(SStiva *stiva)
+void stack_pop(Stack *stiva)
 {
-    if (stiva != NULL) {
-        SStiva tmp = *stiva;
-        *stiva = (*stiva)->urm;
-        free(tmp);
-    }
+    if (!stiva) return;
+
+    // Stiva nu este vida:
+    Stack tmp = *stiva;
+    *stiva = (*stiva)->urm;
+    free(tmp);
 }
 
 
-void delete_stack(SStiva *stiva)
+void delete_stack(Stack *stiva)
 {
     while (*stiva != NULL) {
         stack_pop(stiva);
