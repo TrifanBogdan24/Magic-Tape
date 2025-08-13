@@ -204,11 +204,11 @@ extragem ultimul nod din cealaltă.
 
 ```c
 if (strstr(line, UNDO) != NULL) {
-    stack_push(&stack_redo , banda->deget);
+    stack_push(&stack_redo, banda->deget);
     banda->deget = stack_top(stack_undo);
     stack_pop(&stack_undo);
 } else if (strstr(line, REDO) != NULL) {
-    stack_push(&stack_undo , banda->deget);
+    stack_push(&stack_undo, banda->deget);
     banda->deget = stack_top(stack_redo);
     stack_pop(&stack_redo);
 }
