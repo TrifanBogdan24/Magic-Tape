@@ -10,7 +10,7 @@ void exec_operation(FILE* fout, Queue *coada, Banda *banda, Stack *undo, Stack *
     if (coada->head == NULL) return;
 
     char cmd_to_exec[LINE_LENGTH];
-    strcpy(cmd_to_exec, coada->head->informatie);
+    strcpy(cmd_to_exec, coada->head->operation);
     queue_pop(coada);
 
     if (strstr(cmd_to_exec, WRITE_CHAR)) {
@@ -64,7 +64,7 @@ void exec_operation(FILE* fout, Queue *coada, Banda *banda, Stack *undo, Stack *
 }
 
 
-int main()
+int main(void)
 {
     Banda* banda = new_banda();
     Queue* queue_execute_update = new_queue();
@@ -97,19 +97,15 @@ int main()
             fprintf(fout , "%c\n" , banda->deget->caracter);
         } else if (strstr(line , SHOW_ALL) != NULL) {
             print_banda(fout , banda);
-        } else if (strstr(line , UNDO) != NULL ) {
-            if( stack_undo != NULL && stack_undo->informatie != NULL) {
-                stack_push(&stack_redo , banda->deget);   // punem in varful stivei REDO varful lui UNDO
-                banda->deget = stack_undo->informatie;    // extragem pointerul din varful stivei UNDO
-                stack_pop(&stack_undo);                   // stergem varful stivei UNDO
-            }
+        } else if (strstr(line , UNDO) != NULL) {
+            stack_push(&stack_redo , banda->deget);   // punem in varful stivei REDO nodul curent al degetului
+            banda->deget = stack_undo->pos_deget;     // extragem pointerul din varful stivei UNDO
+            stack_pop(&stack_undo);                   // stergem varful stivei UNDO
         } else if (strstr(line , REDO) != NULL ) {
-            if (stack_redo != NULL && stack_redo->informatie != NULL) {
-                stack_push(&stack_undo , banda->deget);    // punem in varful stivei UNDO varful lui REDO
-                banda->deget = stack_redo->informatie;     // extragem pointerul din varful stivei REDO
-                stack_pop(&stack_redo);                    // stergem varful stivei REDO
-            }
-        } else if( strstr(line , WRITE_CHAR) != NULL) {
+            stack_push(&stack_undo , banda->deget);   // punem in varful stivei UNDO nodul curent al degetului
+            banda->deget = stack_redo->pos_deget;     // extragem pointerul din varful stivei REDO
+            stack_pop(&stack_redo);                   // stergem varful stivei REDO
+        } else if (strstr(line , WRITE_CHAR) != NULL) {
             queue_push( queue_execute_update , line);
         } else if (strstr(line , EXECUTE) != NULL) {
             exec_operation(fout, queue_execute_update, banda, &stack_undo, &stack_redo);

@@ -86,6 +86,14 @@ Un exercițiu perfect de logică, algoritmi și gândire „out of the box”.
 > ea nu face parte din informatia propriu-zisa si nu poate fi modificata in vreun fel.
 
 
+
+La inceputul programului, banda contine doar santinela,
+urmata de caracterul `#` aflat pe prima celula, unde se afla si degetul.
+
+Caracterul `#` este folosit pentru a marca un nod alocat din banda,
+asupra caruia nu s-a realizat nicio operatie de scriere.
+
+
 ```c
 typedef struct NodBanda {
     char caracter;
@@ -115,11 +123,24 @@ void print_banda(FILE *fout, Banda *banda);
 
 ## 🚶‍♂️🚶‍♂️🚶‍♂️ Coada
 
-> Lista simplu inlantuita.
+Am implementat **coada** sub forma unei **liste simplu inlantuite**,
+ce retine ca informatie efectiva numele operatiei de executat.
+
+Pentru simplitate, am ales sa construiesc structura de date pentru **coada** folosind 2 pointeri:
+unul catre inceputul listei si al doilea catre sfarsitul ei.
+
+> 🎯 **Avantaj**: `push()`/`pop()` se realizeaza in `θ(1)`.
+> 
+> Acestea nu mai necesita iterarea **cozii**, chiar daca au loc la capete diferite ale ei.
+
+Pe parcurs ce operatiile de tip **UPDATE** sunt citite din fisier,
+acestea sunt adaugate la finalul unei cozii
+pentru a fi executate in viitor, la intalnirea instructiunii `EXECUTE`.
+
 
 ```c
 typedef struct QueueNode {
-    char informatie[LINE_LENGTH];
+    char operation[LINE_LENGTH];
     struct QueueNode *urm;
 } QueueNode;
 
@@ -141,19 +162,59 @@ void delete_queue(Queue *queue);
 
 ## 📚 Stiva
 
-> Lista simplu inlantuita.
+Cele doua stive utilizate pentru `UNDO`/`REDO`
+sunt practic doua **liste simplu inlantuite**,
+avand ca informatie propriu-zisa pointeri catre
+noduri de pe banda unde s-a aflat degetul.
+
+> 🎯 Operatiile de `push()`/`pop()` asupra acestora
+> au loc doar la capatul de inceput de listei, in `θ(1)`.
+
+
 
 
 ```c
 typedef struct Stack {
     struct Stack *urm;
-    NodBanda *informatie;
+    NodBanda *pos_deget;
 } StackNode, *Stack;
 ```
 
 
 ```c
-void stack_push(Stack *stack, NodBanda *new_top);
+void stack_push(Stack *stack, NodBanda *new_pos_deget);
 void stack_pop(Stack *stack);
 void delete_stack(Stack *stack);
 ```
+
+
+Cel mai bine este sa privim operatiile de `UNDO`/`REDO`
+sub forma sagetilor din navigarea in istoricului unui browser.
+
+Acestea fiind completementare, ce se intampla in codul de mai jos
+devine practic un *joc de "ping-pong"* intre cele doua stive:
+cand adaugam degetul curent in varful unei stive, extragem pointerul din cealalta.
+
+
+
+```c
+if (strstr(line , UNDO) != NULL ) {
+    stack_push(&stack_redo , banda->deget);
+    banda->deget = stack_undo->pos_deget;
+    stack_pop(&stack_undo);
+} else if (strstr(line , REDO) != NULL ) {
+    stack_push(&stack_undo , banda->deget);
+    banda->deget = stack_redo->pos_deget;
+    stack_pop(&stack_redo);
+}
+```
+
+
+## 📝 I/O
+
+Instructiunile de executat asupra *"masinii Turing"* sunt citite si interpretate,
+linie cu linie, din fisierul `tema1.in`.
+
+Programul va genera mai apoi un fisier denumit `tema1.out` care va contine
+mesajele de eroare si rezultatele comenzilor de tip **QUERY**.
+
