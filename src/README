@@ -3,8 +3,8 @@ TRIFAN BOGDAN-CRISTIAN , 312CD
 STRUCTURI DE DATE
 
     Pentru banda, voi avea nevoie de un tip de date pe care va retine o lista dublu inlantuita cu urmatoarele noduri : inceput, final, santinela(care este inaintea inceputului), si deget (unde indica degetul). 
-    Am nevoie de o lista dublu inlantuita pe care o voi trata drept o coada si care va retine comenzile de tip UPDATE.
-    O sa imi trebuiasca si doua liste dublu inlantuite, pe care le vad ca doua stive, si vor contine doar comenzile : MOVE_LEFT si MOVE_RIGHT. Daca elimin din varful uneia, voi adauga musai in varful celeilalte, iar operatiile pe care le fac pentru cele doua comenzi sunt 'simetrice' / 'opuse'.
+    Am nevoie de o lista simplu inlantuita pe care o voi trata drept o coada si care va retine comenzile de tip UPDATE.
+    O sa imi trebuiasca si doua liste simplu inlantuite, pe care le vad ca doua stive, si vor contine doar comenzile : MOVE_LEFT si MOVE_RIGHT. Daca elimin din varful uneia, voi adauga musai in varful celeilalte, iar operatiile pe care le fac pentru cele doua comenzi sunt 'simetrice' / 'opuse'.
     Coada si stivele vor fi deci liste dublu inlantuie :
         - pentru coada (FIFO = First In First Out), vom face operatia de inserare la final, si pe cea de stergere la inceput
         - coada (LIFO = Last In First Out), vom face ambele operatii de la nodul de inceput al listei.
