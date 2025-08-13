@@ -15,13 +15,13 @@ Un exercițiu perfect de logică, algoritmi și gândire „out of the box”.
 
 | Operatie | Descriere |
 | :--- | :--- |
-| **MOVE_LEFT**  | Muta degetul cu o pozitie la stanga |
-| **MOVE_RIGHT** | Muta degetul cu o pozitie la dreapta |
-| **MOVE_LEFT_CHAR \<C\>**  | Muta degetul pe prima aparitie a caracterului \<C\> din stanga pozitiei sale curente |
-| **MOVE_RIGHT_CHAR \<C\>** | Muta degetul pe prima aparitie a caracterului \<C\> din dreapta pozitiei sale curente |
-| **INSERT_LEFT \<C\>**| Insereaza caracterul \<C\> in stanga degetului si muta degetul pe noul nod |
-| **INSERT_RIGHT \<C\>** | Insereaza caracterul \<C\> in dreapta degetului si muta degetul pe noul nod |
-| **WRITE \<C\>** | Suprascrie caracterul curent cu \<C\> |
+| `MOVE_LEFT`  | Muta degetul cu o pozitie la stanga |
+| `MOVE_RIGHT` | Muta degetul cu o pozitie la dreapta |
+| `MOVE_LEFT_CHAR \<C\>`  | Muta degetul pe prima aparitie a caracterului \<C\> din stanga pozitiei sale curente |
+| `MOVE_RIGHT_CHAR \<C\>` | Muta degetul pe prima aparitie a caracterului \<C\> din dreapta pozitiei sale curente |
+| `INSERT_LEFT \<C\>` | Insereaza caracterul \<C\> in stanga degetului si muta degetul pe noul nod |
+| `INSERT_RIGHT \<C\>` | Insereaza caracterul \<C\> in dreapta degetului si muta degetul pe noul nod |
+| `WRITE \<C\>` | Suprascrie caracterul curent cu \<C\> |
 
 
 
@@ -29,21 +29,21 @@ Un exercițiu perfect de logică, algoritmi și gândire „out of the box”.
 
 | Operatie | Descriere |
 | :--- | :--- |
-| **SHOW_CURRENT** | Afiseaza caraceterul din pozitia degetului |
-| **SHOW** | Afiseaza continutul intregii benzii (de la inceput pana la final) |
+| `SHOW_CURRENT` | Afiseaza caraceterul din pozitia degetului |
+| `SHOW` | Afiseaza continutul intregii benzii (de la inceput pana la final) |
 
 ## Operatii de tip UNDO/REDO
 
 | Operatie | Descriere |
 | :--- | :--- |
-| **UNDO** | Anuleaza ultima operatie de `MOVE_LEFT`/`MOVE_RIGHT` |
-| **REDO** | Reface ultima operatie de `MOVE_LEFT`/`MOVE_RIGHT` |
+| `UNDO` | Anuleaza ultima operatie de `MOVE_LEFT`/`MOVE_RIGHT` |
+| `REDO` | Reface ultima operatie de `MOVE_LEFT`/`MOVE_RIGHT` |
 
 ## Operatia EXECUTE
 
 | Operatie | Descriere |
 | :--- | :--- |
-| **EXECUTE** | Extrage o comanda din coada si o executa |
+| `EXECUTE` | Extrage o comanda din coada si o executa |
 
 
 ## Corner Case-uri
