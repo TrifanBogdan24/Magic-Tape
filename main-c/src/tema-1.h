@@ -42,12 +42,12 @@ typedef struct Banda {
 
 typedef struct Stack {
     struct Stack *urm;
-    NodBanda *informatie;
+    NodBanda *pos_deget;
 } StackNode, *Stack;
 
 
 typedef struct QueueNode {
-    char informatie[LINE_LENGTH];
+    char operation[LINE_LENGTH];
     struct QueueNode *urm;
 } QueueNode;
 
@@ -166,13 +166,13 @@ void print_banda(FILE *fout, Banda *banda)
 }
 
 
-QueueNode *new_queue_node(char informatie[LINE_LENGTH])
+QueueNode *new_queue_node(char operation[LINE_LENGTH])
 {
     // cream un nou nod
     QueueNode* new_node = malloc(sizeof(QueueNode));
     new_node->urm = NULL;
-    strcpy(new_node->informatie, informatie);
-   return new_node;
+    strcpy(new_node->operation, operation);
+    return new_node;
 }
 
 
@@ -186,21 +186,21 @@ Queue* new_queue()
 }
 
 
-void queue_push(Queue *queue, char informatie[LINE_LENGTH])
+void queue_push(Queue *queue, char operation[LINE_LENGTH])
 {
     if (!queue) {
         // coada este vida
         queue = new_queue();
-        queue->head = queue->tail = new_queue_node(informatie);
+        queue->head = queue->tail = new_queue_node(operation);
         return;
     } 
     if (queue && !queue->head) {
         // coada nu este initializata, ea exista, dar nu retine nimic
-        queue->head = queue->tail = new_queue_node(informatie);
+        queue->head = queue->tail = new_queue_node(operation);
         return;
     }
     // coada are cel putin un element
-    QueueNode* new_nod = new_queue_node(informatie);
+    QueueNode* new_nod = new_queue_node(operation);
     queue->tail->urm = new_nod;
     queue->tail = new_nod;
 }
@@ -208,6 +208,8 @@ void queue_push(Queue *queue, char informatie[LINE_LENGTH])
 
 void queue_pop(Queue *queue)
 {
+    if (!queue || !queue->head) return;
+
     // sterge primul element al coada, dar nu si coada in sine
     QueueNode* tmp = queue->head;
     queue->head = queue->head->urm;
@@ -232,12 +234,10 @@ void delete_queue(Queue *queue)
 	free(queue);
 }
 
-
-
-void stack_push(Stack *stack, NodBanda *new_top)
+void stack_push(Stack *stack, NodBanda *new_pos_deget)
 {
     Stack new_stack = (Stack) malloc(sizeof(StackNode));
-    new_stack->informatie = new_top;
+    new_stack->pos_deget = new_pos_deget;
     new_stack->urm = *stack;
     *stack = new_stack;
 }
