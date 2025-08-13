@@ -11,6 +11,7 @@
 
 
 ### ⛓️ Banda
+---
 
 > Lista dublu inlantuita.
 
@@ -42,6 +43,7 @@ void print_banda(FILE *fout, Banda *banda);
 
 
 ### 🚶‍♂️🚶‍♂️🚶‍♂️ Coada
+---
 
 > Lista simpla inlantuita.
 
@@ -68,6 +70,7 @@ void delete_queue(Queue *queue);
 ```
 
 ### 📚 Stiva
+---
 
 > Lista simpla inlantuita.
 
