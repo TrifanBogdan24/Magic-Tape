@@ -1,0 +1,22 @@
+In file included from tema-1.c:5:
+tema-1.h: In function ‘stack_top’:
+tema-1.h:247:23: error: ‘*stack’ is a pointer; did you mean to use ‘->’?
+  247 |     if (stack && stack->pos_deget)
+      |                       ^~
+      |                       ->
+In file included from tema-1.c:5:
+tema-1.h: In function ‘stack_top’:
+tema-1.h:247:23: error: ‘*stack’ is a pointer; did you mean to use ‘->’?
+  247 |     if (stack && stack->pos_deget)
+      |                       ^~
+      |                       ->
+tema-1.h:248:21: error: ‘*stack’ is a pointer; did you mean to use ‘->’?
+  248 |         return stack->pos_deget;
+      |                     ^~
+      |                     ->
+tema-1.h:248:21: error: ‘*stack’ is a pointer; did you mean to use ‘->’?
+  248 |         return stack->pos_deget;
+      |                     ^~
+      |                     ->
+make: *** [Makefile:6: build] Error 1
+make: *** [Makefile:6: build] Error 1
