@@ -63,14 +63,14 @@ typedef struct Queue {
 NodBanda *new_banda_node(char caracter)
 {
     // cream un nou nod
-    NodBanda* new_node = malloc(sizeof(NodBanda));
+    NodBanda *new_node = malloc(sizeof(NodBanda));
     new_node->urm = new_node->pred = NULL;
     new_node->caracter = caracter;
     return new_node;
 }
 
 
-Banda* new_banda()
+Banda *new_banda()
 {
     // creem o banda cu santinela
     Banda *banda_noua = malloc(sizeof(Banda));
@@ -85,7 +85,7 @@ Banda* new_banda()
 void delete_banda(Banda *banda)
 {
     while (banda->tail != banda->santinela) {
-        NodBanda* tmp = banda->tail;
+        NodBanda *tmp = banda->tail;
         banda->tail = banda->tail->pred;
         free(tmp);
     }
@@ -105,9 +105,9 @@ void banda_insert_to_tail(Banda *banda, char caracter)
     }
     
     // Banda are cel putin un element
-    NodBanda* nodul_final = new_banda_node(caracter);
+    NodBanda *nodul_final = new_banda_node(caracter);
     nodul_final->pred = banda->tail;
-    banda->tail-> urm = nodul_final;
+    banda->tail->urm = nodul_final;
     banda->tail = nodul_final;
 }
 
@@ -122,7 +122,7 @@ void banda_insert_to_left(FILE *fout, Banda *banda, char caracter)
     }
 
     // Banda nevida
-    NodBanda* new_node = new_banda_node(caracter);
+    NodBanda *new_node = new_banda_node(caracter);
     new_node->pred = banda->deget->pred;
     new_node->urm = banda->deget;
     banda->deget->pred->urm = new_node;
@@ -137,13 +137,13 @@ void banda_insert_to_right(Banda *banda, char caracter)
     if (banda->deget == banda->tail) {
         // banda nu contine nicio informatie
         // inseram la final de banda
-        banda_insert_to_tail(banda , caracter);
+        banda_insert_to_tail(banda, caracter);
         banda->deget = banda->tail; 
         return;
     }
 
     // Banda nevida
-    NodBanda* new_node = new_banda_node(caracter);
+    NodBanda *new_node = new_banda_node(caracter);
     new_node->pred = banda->deget;
     new_node->urm = banda->deget->urm;
     banda->deget->urm->pred = new_node;
@@ -154,11 +154,11 @@ void banda_insert_to_right(Banda *banda, char caracter)
 
 void print_banda(FILE *fout, Banda *banda)
 {
-    for (NodBanda* iter = banda->head; iter; iter = iter->urm) {
+    for (NodBanda *iter = banda->head; iter; iter = iter->urm) {
         if (iter == banda->deget) {
-            fprintf(fout , "|%c|" , iter->caracter);
+            fprintf(fout, "|%c|", iter->caracter);
         } else {
-            fprintf(fout , "%c" , iter->caracter);
+            fprintf(fout, "%c", iter->caracter);
         }
     }
     fprintf(fout, "\n");
@@ -168,17 +168,17 @@ void print_banda(FILE *fout, Banda *banda)
 QueueNode *new_queue_node(char operation[LINE_LENGTH])
 {
     // cream un nou nod
-    QueueNode* new_node = malloc(sizeof(QueueNode));
+    QueueNode *new_node = malloc(sizeof(QueueNode));
     new_node->urm = NULL;
     strcpy(new_node->operation, operation);
     return new_node;
 }
 
 
-Queue* new_queue()
+Queue *new_queue()
 {
 	// cream o coada noua
-	Queue* queue = malloc(sizeof(Queue));
+	Queue *queue = malloc(sizeof(Queue));
 	queue->head = NULL;
 	queue->tail = NULL;
 	return queue;
@@ -199,7 +199,7 @@ void queue_push(Queue *queue, char operation[LINE_LENGTH])
         return;
     }
     // coada are cel putin un element
-    QueueNode* new_nod = new_queue_node(operation);
+    QueueNode *new_nod = new_queue_node(operation);
     queue->tail->urm = new_nod;
     queue->tail = new_nod;
 }
@@ -210,7 +210,7 @@ void queue_pop(Queue *queue)
     if (!queue || !queue->head) return;
 
     // sterge primul element al coada, dar nu si coada in sine
-    QueueNode* tmp = queue->head;
+    QueueNode *tmp = queue->head;
     queue->head = queue->head->urm;
     free(tmp);
 }
@@ -242,9 +242,17 @@ void stack_push(Stack *stack, NodBanda *new_pos_deget)
 }
 
 
+NodBanda *stack_top(Stack stack)
+{
+    if (stack)
+        return stack->pos_deget;
+    return NULL;
+}
+
 void stack_pop(Stack *stack)
 {
-    if (!stack) return;
+    if (!stack)
+        return;
 
     // Stiva nu este vida:
     Stack tmp = *stack;

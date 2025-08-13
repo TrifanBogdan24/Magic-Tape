@@ -154,7 +154,7 @@ typedef struct Queue {
 
 ```c
 QueueNode *new_queue_node(char informatie[LINE_LENGTH]);
-Queue* new_queue();
+Queue *new_queue();
 void queue_push(Queue *queue, char informatie[LINE_LENGTH]);
 void queue_pop(Queue *queue);
 void delete_queue(Queue *queue);
@@ -185,6 +185,7 @@ typedef struct Stack {
 
 ```c
 void stack_push(Stack *stack, NodBanda *new_pos_deget);
+NodBanda *stack_top(Stack *stack);
 void stack_pop(Stack *stack);
 void delete_stack(Stack *stack);
 ```
@@ -204,11 +205,11 @@ extragem ultimul nod din cealaltă.
 ```c
 if (strstr(line, UNDO) != NULL) {
     stack_push(&stack_redo , banda->deget);
-    banda->deget = stack_undo->pos_deget;
+    banda->deget = stack_top(stack_undo);
     stack_pop(&stack_undo);
 } else if (strstr(line, REDO) != NULL) {
     stack_push(&stack_undo , banda->deget);
-    banda->deget = stack_redo->pos_deget;
+    banda->deget = stack_top(stack_redo);
     stack_pop(&stack_redo);
 }
 ```
