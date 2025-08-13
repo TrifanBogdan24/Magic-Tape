@@ -33,10 +33,10 @@ typedef struct NodBanda {
 } NodBanda;
 
 typedef struct Banda {
-    NodBanda *head;         // pointer la primul nod al listei
-    NodBanda *tail;         // pointer la ultimul nod al listei
-    NodBanda *santinela;    // pointer la nodul santinela (marcheaza baza listei)
-    NodBanda *deget;        // pointer la nodul curent (pozitia "degetului")
+    NodBanda *head;          // pointer la primul nod al listei
+    NodBanda *tail;          // pointer la ultimul nod al listei
+    NodBanda *santinela;     // pointer la nodul santinela (marcheaza baza listei)
+    NodBanda *deget;         // pointer la nodul curent (pozitia "degetului")
 } Banda;
 
 
@@ -53,10 +53,9 @@ typedef struct QueueNode {
 
 
 typedef struct Queue {
-    QueueNode *head;         // pointer la nodul de inceput al cozii
-    QueueNode *tail;         // pointer la nodul de la sfarsitul cozii
+    QueueNode *head;         // pointer la nodul de la începutul cozii
+    QueueNode *tail;         // pointer la nodul de la sfârșitul cozii
 } Queue;
-
 
 
 
