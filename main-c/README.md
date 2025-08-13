@@ -72,13 +72,13 @@ Un exercițiu perfect de logică, algoritmi și gândire „out of the box”.
 
 ## Structuri de Date si Algoritmi
 
-- Banda
+- Lista simplu/dublu inlantuita
 - Stiva
 - Coada
 
 
-## ⛓️ Banda
-
+### ⛓️ Banda
+---
 
 > ⚠️ ATENTIE:
 >
@@ -121,7 +121,8 @@ void print_banda(FILE *fout, Banda *banda);
 ```
 
 
-## 🚶‍♂️🚶‍♂️🚶‍♂️ Coada
+### 🚶‍♂️🚶‍♂️🚶‍♂️ Coada
+---
 
 Am implementat **coada** sub forma unei **liste simplu inlantuite**,
 ce retine ca informatie efectiva numele operatiei de executat.
@@ -160,7 +161,8 @@ void queue_pop(Queue *queue);
 void delete_queue(Queue *queue);
 ```
 
-## 📚 Stiva
+### 📚 Stiva
+---
 
 Cele doua stive utilizate pentru `UNDO`/`REDO`
 sunt practic doua **liste simplu inlantuite**,
