@@ -28,16 +28,15 @@
 
 typedef struct NodBanda {
     char caracter;
-    struct NodBanda *urm;    // adresa catre urmatorul nod din coada (next)
-    struct NodBanda *pred;   // adresa catre nodul anterior din coada (previous)
+    struct NodBanda *urm;    // pointer la urmatorul nod din lista (next)
+    struct NodBanda *pred;   // pointer la nodul anterior din lista (previous)
 } NodBanda;
 
-
-typedef struct Banda{
-    NodBanda *head;       // va memora nodul de inceput al listei
-    NodBanda *tail;         // va memora nodul final al listei
-    NodBanda *santinela;    // santinela, fundatia listei
-    NodBanda *deget;         // va memora nodul catre care degetul indica
+typedef struct Banda {
+    NodBanda *head;         // pointer la primul nod al listei
+    NodBanda *tail;         // pointer la ultimul nod al listei
+    NodBanda *santinela;    // pointer la nodul santinela (marcheaza baza listei)
+    NodBanda *deget;        // pointer la nodul curent (pozitia "degetului")
 } Banda;
 
 
@@ -49,26 +48,17 @@ typedef struct Stack {
 
 typedef struct QueueNode {
     char informatie[LINE_LENGTH];
-    struct QueueNode* urm;    // adresa catre urmatorul nod din coada (next)
-    struct QueueNode* pred;   // adresa catre nodul anterior din coada (previous)
+    struct QueueNode *urm;
 } QueueNode;
 
 
 typedef struct Queue {
-    QueueNode* head;         // va memora nodul de inceput al listei
-    QueueNode* tail;         // va memora nodul de la sfarsitul listei
+    QueueNode *head;         // pointer la nodul de inceput al cozii
+    QueueNode *tail;         // pointer la nodul de la sfarsitul cozii
 } Queue;
 
 
 
-QueueNode *new_queue_node(char informatie[LINE_LENGTH])
-{
-    // cream un nou nod
-    QueueNode* new_node = malloc(sizeof(QueueNode));
-    new_node->urm = new_node->pred = NULL;
-    strcpy(new_node->informatie, informatie);
-   return new_node;
-}
 
 
 NodBanda *new_banda_node(char caracter)
@@ -108,14 +98,14 @@ void delete_banda(Banda *banda)
 void banda_insert_to_tail(Banda *banda, char caracter)
 {
     if (!banda || !banda->head) {
-        // Queue vida, elementul va deveni primul nod al listei
+        // Banda este vida, elementul va deveni primul nod al listei
         banda->head = banda->tail = new_banda_node(caracter);
         banda->santinela->urm = banda->head;
         banda->head->pred = banda->santinela;
         return;
     }
     
-    // Queue  cel putin un element
+    // Banda are cel putin un element
     NodBanda* nodul_final = new_banda_node(caracter);
     nodul_final->pred = banda->tail;
     banda->tail-> urm = nodul_final;
@@ -176,6 +166,15 @@ void print_banda(FILE *fout, Banda *banda)
 }
 
 
+QueueNode *new_queue_node(char informatie[LINE_LENGTH])
+{
+    // cream un nou nod
+    QueueNode* new_node = malloc(sizeof(QueueNode));
+    new_node->urm = NULL;
+    strcpy(new_node->informatie, informatie);
+   return new_node;
+}
+
 
 Queue* new_queue()
 {
@@ -192,7 +191,7 @@ void queue_push(Queue *queue, char informatie[LINE_LENGTH])
     if (!queue) {
         // coada este vida
         queue = new_queue();
-        queue->head =  queue->tail = new_queue_node(informatie);
+        queue->head = queue->tail = new_queue_node(informatie);
         return;
     } 
     if (queue && !queue->head) {
@@ -202,7 +201,6 @@ void queue_push(Queue *queue, char informatie[LINE_LENGTH])
     }
     // coada are cel putin un element
     QueueNode* new_nod = new_queue_node(informatie);
-    new_nod->pred = queue->tail;
     queue->tail->urm = new_nod;
     queue->tail = new_nod;
 }
@@ -213,28 +211,9 @@ void queue_pop(Queue *queue)
     // sterge primul element al coada, dar nu si coada in sine
     QueueNode* tmp = queue->head;
     queue->head = queue->head->urm;
-    if (queue->head) {
-        queue->head->pred = NULL;
-    }
     free(tmp);
 }
 
-
-void QueueDeleteLastnod(Queue *queue)
-{
-    if (!queue) return;
-    if (queue->head == queue->tail) {
-        // coada are un singur element
-        free(queue->head);
-        free(queue->tail);
-        return;
-    } else {
-        // coada are mai multe elemente
-        queue->tail = queue->tail->pred;
-        free(queue->tail->urm);
-        return;
-    }
-}
 
 
 void delete_queue(Queue *queue)
@@ -264,23 +243,23 @@ void stack_push(Stack *stack, NodBanda *new_top)
 }
 
 
-void stack_pop(Stack *stiva)
+void stack_pop(Stack *stack)
 {
-    if (!stiva) return;
+    if (!stack) return;
 
     // Stiva nu este vida:
-    Stack tmp = *stiva;
-    *stiva = (*stiva)->urm;
+    Stack tmp = *stack;
+    *stack = (*stack)->urm;
     free(tmp);
 }
 
 
-void delete_stack(Stack *stiva)
+void delete_stack(Stack *stack)
 {
-    while (*stiva != NULL) {
-        stack_pop(stiva);
+    while (*stack != NULL) {
+        stack_pop(stack);
     }
-    free(stiva);
+    free(stack);
 }
 
 #endif
