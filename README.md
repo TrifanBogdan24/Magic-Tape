@@ -111,7 +111,7 @@ typedef struct Banda {
 
 ```c
 NodBanda *new_banda_node(char caracter);
-Banda* new_banda();
+Banda *new_banda();
 void delete_banda(Banda *banda);
 void banda_insert_to_left(FILE *fout, Banda *banda, char caracter);
 void banda_insert_to_tail(Banda *banda, char caracter);
