@@ -46,7 +46,7 @@ Un exercițiu perfect de logică, algoritmi și gândire „out of the box”.
 | `EXECUTE` | Extrage o comanda din coada si o executa |
 
 
-## Corner Case-uri
+## ⚠️ Corner Case-uri
 
 - `MOVE_LEFT`:
     nu se va intampla nimic daca degetul este pe prima pozitie
@@ -77,7 +77,8 @@ Un exercițiu perfect de logică, algoritmi și gândire „out of the box”.
 - Coada
 
 
-## ⛓️ Banda
+### ⛓️ Banda
+---
 
 > ⚠️ ATENTIE:
 >
@@ -120,7 +121,8 @@ void print_banda(FILE *fout, Banda *banda);
 ```
 
 
-## 🚶‍♂️🚶‍♂️🚶‍♂️ Coada
+### 🚶‍♂️🚶‍♂️🚶‍♂️ Coada
+---
 
 Am implementat **coada** sub forma unei **liste simplu inlantuite**,
 ce retine ca informatie efectiva numele operatiei de executat.
@@ -159,7 +161,8 @@ void queue_pop(Queue *queue);
 void delete_queue(Queue *queue);
 ```
 
-## 📚 Stiva
+### 📚 Stiva
+---
 
 Cele doua stive utilizate pentru `UNDO`/`REDO`
 sunt practic doua **liste simplu inlantuite**,
@@ -217,3 +220,85 @@ linie cu linie, din fisierul `tema1.in`.
 Programul va genera mai apoi un fisier denumit `tema1.out` care va contine
 mesajele de eroare si rezultatele comenzilor de tip **QUERY**.
 
+## 📥 Instalare dependinte
+
+```sh
+sudo apt install -y build-essential valgrind
+```
+
+## ⚙️ Rulare program
+
+```sh
+cd src/
+make build   # Compilare
+make run     # Executie
+make clean   # Curatare
+```
+
+
+## ✅🔁 Testare Automata
+
+- Testare implementarii:
+```sh
+cd tests/
+chmod +x checker.sh
+./checker.sh
+```
+
+- Testare coding style:
+```sh
+# Din radacina repository-ului:
+chmod +x tests/coding-style/cs.sh
+./tests/coding-style/cs.sh src/*
+```
+
+### 🧪 GitHub Actions | CI Pipeline
+---
+
+**Integrarea Continuă** este o parte esențială a procesului de testare.
+
+În acest proiect, **GitHub Actions** rulează automat testele
+ori de câte ori se face *push* în repository sau se deschide un *pull request*.
+
+Workflow-ul este definit in urmatorul fisier:
+[.github/workflows/CI-tests.yml](./.github/workflows/CI-tests.yml)
+
+
+### 🌃 Overnight Testing
+---
+
+Testele nu numai ca sunt rulate la fiecare **commit**/**pull request**,
+dar mai mult decat atat, am extins workflow-ul de CI
+sa include o rulare **programata in fiecare noapte** (`cron job`)
+care execute integral testele in **GitHub Actions**.
+
+> In **DevOps**, acest tip de executie programata poarta numele de *"overnight testing"*.
+
+
+```yml
+on:
+  schedule:
+    # Overnight: run tests every day at 21:30 UTC
+    # Usage: cron <minute> <hour> <day-of-month> <day-of-week (sunday=0)>
+    - cron: "30 21 * * *"
+```
+
+Pentru a distinge clar rulările programate de cele on-demand (**commit**/**PR**),  
+workflow-ul **overnight** utilizează un **label** dedicat
+vizibil în lista job-urilor **GitHub Actions**.
+
+
+```yml
+run-name: >
+  ${{ github.event_name == 'schedule'
+      && '🌃 Running Overnight Tests'
+      || (
+        github.event_name == 'push'
+        && format(github.event.head_commit.message)
+        || (
+          github.event_name == 'pull_request'
+          && format(github.event.pull_request.title)
+        )
+      )
+  }}
+```
