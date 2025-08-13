@@ -193,7 +193,7 @@ sub forma sagetilor din navigarea in istoricului unui browser.
 
 Acestea fiind completementare, ce se intampla in codul de mai jos
 devine practic un *joc de "ping-pong"* intre cele doua stive:
-cand adaugam degetul curent in varful unei stive, extragem pointerul din cealalta.
+cand adaugam degetul curent in varful uneia, extragem pointerul din cealalta.
 
 
 
@@ -210,7 +210,7 @@ if (strstr(line , UNDO) != NULL ) {
 ```
 
 
-## 📝 I/O
+## 📝 Input/Output
 
 Instructiunile de executat asupra *"masinii Turing"* sunt citite si interpretate,
 linie cu linie, din fisierul `tema1.in`.
