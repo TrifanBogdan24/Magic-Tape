@@ -1,6 +1,6 @@
 # 🎞️ Magic Tape
 
-> **Masina Turing** implementata in C folosind **liste inlantuite**.
+> **Mașina Turing** implementată în C folosind **liste înlănțuite**.
 
 **Banda Magică** este un experiment de programare inspirat de *mașina Turing*:
 o bandă „infinită” unde poți scrie, citi și naviga liber,
@@ -11,101 +11,100 @@ gândită pentru eficiență și ușurință în manipularea datelor.
 Un exercițiu perfect de logică, algoritmi și gândire „out of the box”.
 
 
-## Operatii de tip UPDATE
+## Operații de tip UPDATE
 
-| Operatie | Descriere |
+| Operație | Descriere |
 | :--- | :--- |
-| `MOVE_LEFT`  | Muta degetul cu o pozitie la stanga |
-| `MOVE_RIGHT` | Muta degetul cu o pozitie la dreapta |
-| `MOVE_LEFT_CHAR \<C\>`  | Muta degetul pe prima aparitie a caracterului \<C\> din stanga pozitiei sale curente |
-| `MOVE_RIGHT_CHAR \<C\>` | Muta degetul pe prima aparitie a caracterului \<C\> din dreapta pozitiei sale curente |
-| `INSERT_LEFT \<C\>` | Insereaza caracterul \<C\> in stanga degetului si muta degetul pe noul nod |
-| `INSERT_RIGHT \<C\>` | Insereaza caracterul \<C\> in dreapta degetului si muta degetul pe noul nod |
+| `MOVE_LEFT`  | Mută degetul cu o poziție la stanga |
+| `MOVE_RIGHT` | Mută degetul cu o poziție la dreapta |
+| `MOVE_LEFT_CHAR \<C\>`  | Mută degetul pe prima apariție a caracterului \<C\> din stânga poziției sale curente |
+| `MOVE_RIGHT_CHAR \<C\>` | Mută degetul pe prima apariție a caracterului \<C\> din dreapta poziției sale curente |
+| `INSERT_LEFT \<C\>` | Inserează caracterul \<C\> în stânga degetului și mută degetul pe noul nod |
+| `INSERT_RIGHT \<C\>` | Inserează caracterul \<C\> în dreapta degetului și mută degetul pe noul nod |
 | `WRITE \<C\>` | Suprascrie caracterul curent cu \<C\> |
 
 
 
-## Operatii de tip QUERY
+## Operații de tip QUERY
 
-| Operatie | Descriere |
+| Operație | Descriere |
 | :--- | :--- |
-| `SHOW_CURRENT` | Afiseaza caraceterul din pozitia degetului |
-| `SHOW` | Afiseaza continutul intregii benzii (de la inceput pana la final) |
+| `SHOW_CURRENT` | Afișează caraceterul din poziția degetului |
+| `SHOW` | Afișează conținutul întregii benzii (de la început până la final) |
 
-## Operatii de tip UNDO/REDO
+## Operații de tip UNDO/REDO
 
-| Operatie | Descriere |
+| Operație | Descriere |
 | :--- | :--- |
-| `UNDO` | Anuleaza ultima operatie de `MOVE_LEFT`/`MOVE_RIGHT` |
-| `REDO` | Reface ultima operatie de `MOVE_LEFT`/`MOVE_RIGHT` |
+| `UNDO` | Anulează ultima operație de `MOVE_LEFT`/`MOVE_RIGHT` |
+| `REDO` | Reface ultima operație de `MOVE_LEFT`/`MOVE_RIGHT` |
 
-## Operatia EXECUTE
+## Operația EXECUTE
 
-| Operatie | Descriere |
+| Operație | Descriere |
 | :--- | :--- |
-| `EXECUTE` | Extrage o comanda din coada si o executa |
+| `EXECUTE` | Extrage o comandă din coadă și o execută |
 
 
 ## ⚠️ Corner Case-uri
 
 - `MOVE_LEFT`:
-    nu se va intampla nimic daca degetul este pe prima pozitie
+    nu se va întâmpla nimic dacă degetul este pe prima poziție
 - `MOVE_RIGHT`:
-    daca degetul este plasat pe ultimul nod din banda,
+    dacă degetul este plasat pe ultimul nod din bandă,
     se va insera caracterul `#` la finalul listei,
-    iar degetul va fi pozitionat pe noul caracter adaugat
+    iar degetul va fi poziționat pe noul caracter adăugat
 
 - `MOVE_LEFT_CHAR <C>`:
-    daca nu exista niciun caracter \<C\> in stanga degetului,
-    pozitia acestuia nu se va modifica
-    si se va fisa mesajul `ERROR`
+    dacă nu există niciun caracter \<C\> în stânga degetului,
+    poziția acestuia nu se va modifica
+    și se va afișa mesajul `ERROR`
 - `MOVE_RIGHT_CHAR <C>`:
-    daca nu exista niciun caracter \<C\> in dreapta degetului,
+    dacă nu există niciun caracter \<C\> în dreapta degetului,
     se va insera `#` la finaul benzii
-    si pozitia degetului va fi pe `#`-ul inserat
+    și poziția degetului va fi pe `#`-ul inserat
 
 - `INSERT_LEFT <C>`:
-    daca degetul este deja la inceputul benzii,
-    se va afisa mesajul `ERROR` si nu va modifica nimic
+    dacă degetul este deja la începutul benzii,
+    se va afișa mesajul `ERROR` și nu va modifica nimic
 
 
 
-## Structuri de Date si Algoritmi
+## Structuri de Date și Algoritmi
 
-- Lista simplu/dublu inlantuita
-- Stiva
-- Coada
+- Listă simplu/dublu înlănțuită
+- Stivă
+- Coadă
 
 
 ### ⛓️ Banda
 ---
 
-> ⚠️ ATENTIE:
+> ⚠️ ATENȚIE:
 >
-> **Santinela** este practic un nod plasat la inceputul listei;
-> ea nu face parte din informatia propriu-zisa si nu poate fi modificata in vreun fel.
+> **Santinela** este practic un nod plasat la începutul listei;
+> ea nu face parte din informația propriu-zisă și nu poate fi modificată in vreun fel.
 
 
+La începutul programului, banda conține doar santinela,
+urmată de caracterul `#` aflat pe prima celulă, unde se află și degetul.
 
-La inceputul programului, banda contine doar santinela,
-urmata de caracterul `#` aflat pe prima celula, unde se afla si degetul.
-
-Caracterul `#` este folosit pentru a marca un nod alocat din banda,
-asupra caruia nu s-a realizat nicio operatie de scriere.
+Caracterul `#` este folosit pentru a marca un nod alocat din bandă,
+asupra căruia nu s-a realizat nicio operație de scriere.
 
 
 ```c
 typedef struct NodBanda {
     char caracter;
-    struct NodBanda *urm;    // pointer la urmatorul nod din lista (next)
-    struct NodBanda *pred;   // pointer la nodul anterior din lista (previous)
+    struct NodBanda *urm;    // pointer la următorul nod din listă (next)
+    struct NodBanda *pred;   // pointer la nodul anterior din listă (previous)
 } NodBanda;
 
 typedef struct Banda {
-    NodBanda *head;         // pointer la primul nod al listei
-    NodBanda *tail;         // pointer la ultimul nod al listei
-    NodBanda *santinela;    // pointer la nodul santinela (marcheaza baza listei)
-    NodBanda *deget;        // pointer la nodul curent (pozitia "degetului")
+    NodBanda *head;          // pointer la primul nod al listei
+    NodBanda *tail;          // pointer la ultimul nod al listei
+    NodBanda *santinela;     // pointer la nodul santinelă (marcheaza baza listei)
+    NodBanda *deget;         // pointer la nodul curent (poziția "degetului")
 } Banda;
 ```
 
@@ -124,19 +123,19 @@ void print_banda(FILE *fout, Banda *banda);
 ### 🚶‍♂️🚶‍♂️🚶‍♂️ Coada
 ---
 
-Am implementat **coada** sub forma unei **liste simplu inlantuite**,
-ce retine ca informatie efectiva numele operatiei de executat.
+Am implementat **coada** sub forma unei **liste simplu înlănțuite**,
+ce reține ca informație efectivă numele operației de executat.
 
-Pentru simplitate, am ales sa construiesc structura de date pentru **coada** folosind 2 pointeri:
-unul catre inceputul listei si al doilea catre sfarsitul ei.
+Pentru simplitate, am ales să construiesc structura de date pentru **coadă** folosind 2 pointeri:
+unul către începutul listei și al doilea către sfârșitul ei.
 
-> 🎯 **Avantaj**: `push()`/`pop()` se realizeaza in `θ(1)`.
+> 🎯 **Avantaj**: `push()`/`pop()` se realizează in `θ(1)`.
 > 
-> Acestea nu mai necesita iterarea **cozii**, chiar daca au loc la capete diferite ale ei.
+> Acestea nu mai necesită iterarea **cozii**, chiar dacă au loc la capete diferite ale ei.
 
-Pe parcurs ce operatiile de tip **UPDATE** sunt citite din fisier,
-acestea sunt adaugate la finalul unei cozii
-pentru a fi executate in viitor, la intalnirea instructiunii `EXECUTE`.
+Pe parcurs ce operațiile de tip **UPDATE** sunt citite din fișier,
+acestea sunt adăugate la finalul unei cozii
+pentru a fi executate in viitor, la întâlnirea instrucțiunii `EXECUTE`.
 
 
 ```c
@@ -147,8 +146,8 @@ typedef struct QueueNode {
 
 
 typedef struct Queue {
-    QueueNode *head;         // pointer la nodul de inceput al cozii
-    QueueNode *tail;         // pointer la nodul de la sfarsitul cozii
+    QueueNode *head;         // pointer la nodul de la începutul cozii
+    QueueNode *tail;         // pointer la nodul de la sfârșitul cozii
 } Queue;
 ```
 
@@ -164,13 +163,14 @@ void delete_queue(Queue *queue);
 ### 📚 Stiva
 ---
 
-Cele doua stive utilizate pentru `UNDO`/`REDO`
-sunt practic doua **liste simplu inlantuite**,
-avand ca informatie propriu-zisa pointeri catre
-noduri de pe banda unde s-a aflat degetul.
+Cele două stive utilizate pentru `UNDO`/`REDO`
+sunt practic două **liste simplu înlănțuite**,
+având ca informație propriu-zisă 
+**pointeri către nodurile prin care degetul s-a deplasat** pe banda magică.
 
-> 🎯 Operatiile de `push()`/`pop()` asupra acestora
-> au loc doar la capatul de inceput de listei, in `θ(1)`.
+
+> 🎯 Operațiile de `push()`/`pop()` asupra acestora
+> au loc doar la căpatul de început al listei, in `θ(1)`.
 
 
 
@@ -190,21 +190,23 @@ void delete_stack(Stack *stack);
 ```
 
 
-Cel mai bine este sa privim operatiile de `UNDO`/`REDO`
-sub forma sagetilor din navigarea in istoricului unui browser.
+Cel mai simplu mod de a înțelege operațiile `UNDO` și `REDO`  
+este să le privim ca pe **săgețile de navigare din istoricul unui browser**.
 
-Acestea fiind completementare, ce se intampla in codul de mai jos
-devine practic un *joc de "ping-pong"* intre cele doua stive:
-cand adaugam degetul curent in varful uneia, extragem pointerul din cealalta.
+
+Fiind complementare, logica din codul de mai jos funcționează  
+ca un *joc de ping-pong* între cele două stive:  
+când adăugăm poziția curentă a degetului în vârful uneia,
+extragem ultimul nod din cealaltă.
 
 
 
 ```c
-if (strstr(line , UNDO) != NULL ) {
+if (strstr(line, UNDO) != NULL) {
     stack_push(&stack_redo , banda->deget);
     banda->deget = stack_undo->pos_deget;
     stack_pop(&stack_undo);
-} else if (strstr(line , REDO) != NULL ) {
+} else if (strstr(line, REDO) != NULL) {
     stack_push(&stack_undo , banda->deget);
     banda->deget = stack_redo->pos_deget;
     stack_pop(&stack_redo);
@@ -214,40 +216,40 @@ if (strstr(line , UNDO) != NULL ) {
 
 ## 📝 Input/Output
 
-Instructiunile de executat asupra *"masinii Turing"* sunt citite si interpretate,
+Instrucțiunile de executat asupra *"mașinii Turing"* sunt citite și interpretate,
 linie cu linie, din fisierul `tema1.in`.
 
-Programul va genera mai apoi un fisier denumit `tema1.out` care va contine
-mesajele de eroare si rezultatele comenzilor de tip **QUERY**.
+Programul va genera mai apoi un fișier denumit `tema1.out` care va conține
+mesajele de eroare și rezultatele comenzilor de tip **QUERY**.
 
-## 📥 Instalare dependinte
+## 📥 Instalarea dependințelor
 
 ```sh
 sudo apt install -y build-essential valgrind
 ```
 
-## ⚙️ Rulare program
+## ⚙️ Rularea programului
 
 ```sh
 cd src/
 make build   # Compilare
-make run     # Executie
-make clean   # Curatare
+make run     # Execuție
+make clean   # Curățare
 ```
 
 
-## ✅🔁 Testare Automata
+## ✅🔁 Testare Automată
 
-- Testare implementarii:
+- Testarea implementării:
 ```sh
 cd tests/
 chmod +x checker.sh
 ./checker.sh
 ```
 
-- Testare coding style:
+- Testarea coding-style-ului:
 ```sh
-# Din radacina repository-ului:
+# Din rădăcina repository-ului:
 chmod +x tests/coding-style/cs.sh
 ./tests/coding-style/cs.sh src/*
 ```
@@ -260,19 +262,20 @@ chmod +x tests/coding-style/cs.sh
 În acest proiect, **GitHub Actions** rulează automat testele
 ori de câte ori se face *push* în repository sau se deschide un *pull request*.
 
-Workflow-ul este definit in urmatorul fisier:
+Workflow-ul este definit în următorul fișier:
 [.github/workflows/CI-tests.yml](./.github/workflows/CI-tests.yml)
 
 
 ### 🌃 Overnight Testing
 ---
 
-Testele nu numai ca sunt rulate la fiecare **commit**/**pull request**,
-dar mai mult decat atat, am extins workflow-ul de CI
-sa include o rulare **programata in fiecare noapte** (`cron job`)
-care execute integral testele in **GitHub Actions**.
+Testele nu numai că sunt rulate la fiecare **commit**/**pull request**,  
+dar, mai mult decât atât, am extins workflow-ul de CI  
+să includă o rulare **programată în fiecare noapte** (`cron job`),  
+care execută integral testele în **GitHub Actions**.
 
-> In **DevOps**, acest tip de executie programata poarta numele de *"overnight testing"*.
+> În **DevOps**, acest tip de execuție programată poartă numele de *"overnight testing"*.
+
 
 
 ```yml
