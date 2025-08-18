@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "tema-1.h"
+#include "utils.h"
 
 
 void exec_operation(FILE *fout, Queue *coada, Banda *banda, Stack *undo, Stack *redo)

@@ -2,8 +2,8 @@ CC=gcc
 CFLAGS=-Wall -g
 
 
-build: tema-1.c tema-1.h
-	$(CC) $(CFLAGS) tema-1.c -o tema1
+build: main.c utils.h
+	$(CC) $(CFLAGS) main.c -o tema1
 
 run: build
 	./tema1
