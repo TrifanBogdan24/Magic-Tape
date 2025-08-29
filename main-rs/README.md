@@ -309,12 +309,12 @@ Hai să facem o analiză de ansamblu a implementării în Rust, comparativ cu C,
 - Output-ul gol sau incomplet dacă nu se face flush
 
 
-### 5️⃣ Traducerea logicii C → Rust
+### 5️⃣ Traducerea logicii C => Rust
 
 - Logica de manipulare a listei (`insert_to_tail`, `insert_to_left`, `insert_to_right`) rămâne aproape identică
 - Diferențele majore sunt tipurile și modul de acces la noduri:  
-  - `node->urm` în C → `node.borrow().urm.clone()` în Rust  
-  - `node->pred` → `node.borrow().pred.as_ref().and_then(|w| w.upgrade())`  
+  - `node->urm` în C => `node.borrow().urm.clone()` în Rust  
+  - `node->pred` => `node.borrow().pred.as_ref().and_then(|w| w.upgrade())`  
 
 
 ---
