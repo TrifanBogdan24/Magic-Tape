@@ -16,9 +16,9 @@ run-name: >
 
 on:
   push:
-    branches: main
+    branches: main-c
   pull_request:
-    branches: main
+    branches: main-c
 
   schedule:
     # Overnight: run tests every day at 21:30 UTC
