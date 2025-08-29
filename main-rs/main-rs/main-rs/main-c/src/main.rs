@@ -7,6 +7,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader, Write};
 
 
+
 // Constante (echivalentul macro-urilor din C)
 const WRITE_CHAR: &str = "WRITE";
 const MOVE_LEFT_CHAR: &str = "MOVE_LEFT_CHAR";
@@ -20,6 +21,11 @@ const SHOW_ALL: &str = "SHOW";
 const UNDO: &str = "UNDO";
 const REDO: &str = "REDO";
 const EXECUTE: &str = "EXECUTE";
+
+// Constante pentru I/O
+const INPUT_FILE: &str = "file.in";
+const OUTPUT_FILE: &str = "file.out";
+
 
 fn exec_operation(
     fout: &mut impl Write,
@@ -124,8 +130,8 @@ fn main() {
     let mut stack_undo: Stack = None;
     let mut stack_redo: Stack = None;
 
-    let fin = File::open("tema1.in").unwrap();
-    let fout = File::create("tema1.out").unwrap();
+    let fin = File::open(INPUT_FILE).unwrap();
+    let fout = File::create(OUTPUT_FILE).unwrap();
     let mut fout = fout;
 
     let reader = BufReader::new(fin);

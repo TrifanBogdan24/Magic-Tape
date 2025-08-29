@@ -1,3 +1,7 @@
+
 /target
-*.in
-*.out
+# Exclude *.in *.out files only from repo's root
+/*.in
+/*.out
+
+compile.info
