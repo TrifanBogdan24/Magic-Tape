@@ -1,0 +1,33 @@
+name: Run Checker Tests
+
+on:
+  push:
+    branches: main-rs
+  pull_request:
+    branches: main-rs
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Rust 🦀 (stable)
+        # actions-rs/toolchain@v1 is now deprecated
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Run tests on implementation
+        working-directory: ./tests
+        run: |
+          chmod +x checker.sh
+          ./checker.sh 2>&1 | tee test_results.txt
+
+      - name: Upload test logs as artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checker-logs
+          path: |
+            tests/test_results.txt
+          retention-days: 5
