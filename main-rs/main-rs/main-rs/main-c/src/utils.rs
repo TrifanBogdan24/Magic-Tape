@@ -9,7 +9,7 @@ pub const DIEZ_CHAR: char = '#';
 pub const SPACE_CHAR: char = ' ';
 pub const ERROR: &str = "ERROR";
 
-// ---------------------- NodBanda & Banda ----------------------
+/* ---------------------- NodBanda & Banda ---------------------- */
 #[derive(Debug)]
 pub struct NodBanda {
     pub caracter: char,
@@ -135,7 +135,7 @@ impl Banda {
     }
 }
 
-// ---------------------- Queue ----------------------
+/* ---------------------- Queue ---------------------- */
 #[derive(Debug)]
 pub struct QueueNode {
     pub operation: String,
@@ -176,7 +176,7 @@ impl Queue {
     }
 }
 
-// ---------------------- Stack ----------------------
+/* ---------------------- Stack ---------------------- */
 #[derive(Debug)]
 pub struct StackNode {
     pub urm: Option<Box<StackNode>>,
