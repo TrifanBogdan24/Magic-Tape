@@ -20,14 +20,14 @@ on:
     branches: main
     paths:
       # Workflow runs ONLY if changes are made in the these directories: 
-      - 'test_data/**'
+      - 'tests_data/**'
       - 'method-c/**'
       - '.github/workflows/**'
   pull_request:
     branches: main
     paths:
       # Workflow runs ONLY if changes are made in the these directories: 
-      - 'test_data/**'
+      - 'tests_data/**'
       - 'method-c/**'
       - '.github/workflows/**'
 

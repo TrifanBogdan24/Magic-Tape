@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-NUM_TOTAL_TESTS=$(ls -1 ../../test_data/Input/*.in | wc -l)
+NUM_TOTAL_TESTS=$(ls -1 ../../tests_data/Input/*.in | wc -l)
 NUM_PASSED_TESTS=0
 
 function readmeExists() {
@@ -13,7 +13,7 @@ function readmeExists() {
 
 
 function testInput() {
-    cat ../test_data/Input/test$1.in > file.in
+    cat ../tests_data/Input/test$1.in > file.in
     cargo run 2> compile.info
 
     if [ "$?" -ne 0 ] ; then
@@ -22,7 +22,7 @@ function testInput() {
         return
     fi
 
-    diff ../test_data/Reference/test$1.ref file.out > /dev/null 2>&1
+    diff ../tests_data/Reference/test$1.ref file.out > /dev/null 2>&1
     if [ "$?" -eq 0 ] ; then
         echo "test$1.in: [OK]"
         NUM_PASSED_TESTS=$((NUM_PASSED_TESTS+1))
