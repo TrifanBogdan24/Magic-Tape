@@ -1,9 +1,9 @@
-name: Run Checker Tests for "main-c"
+name: Run Checker Tests for "method-c"
 
 
 run-name: >
   ${{ github.event_name == 'schedule'
-      && '🌃 Running Overnight Tests for "main-c"'
+      && '🌃 Running Overnight Tests for "method-c"'
       || (
         github.event_name == 'push'
         && format(github.event.head_commit.message)
@@ -21,14 +21,14 @@ on:
     paths:
       # Workflow runs ONLY if changes are made in the these directories: 
       - 'test_data/**'
-      - 'main-c/**'
+      - 'method-c/**'
       - '.github/workflows/**'
   pull_request:
     branches: main
     paths:
       # Workflow runs ONLY if changes are made in the these directories: 
       - 'test_data/**'
-      - 'main-c/**'
+      - 'method-c/**'
       - '.github/workflows/**'
 
   schedule:
@@ -65,7 +65,7 @@ jobs:
           sudo apt install -y python3 valgrind
       
       - name: Run tests on implementation
-        working-directory: ./main-c/tests
+        working-directory: ./method-c/tests
         run: |
           chmod +x checker.sh
           ./checker.sh  2>&1 | tee test_results.txt
@@ -74,7 +74,7 @@ jobs:
         working-directory: ./C-coding-style 
         run: |
           chmod +x cs.sh
-          ./cs.sh ../main-c/src/ 2>&1 | tee ../main-c/tests/coding_style.txt
+          ./cs.sh ../method-c/src/ 2>&1 | tee ../method-c/tests/coding_style.txt
       
       - name: Upload test logs as artifacts
         if: always()
@@ -82,6 +82,6 @@ jobs:
         with:
           name: checker-logs
           path: |
-            main-c/tests/test_results.txt
-            main-c/tests/coding_style.txt
+            method-c/tests/test_results.txt
+            method-c/tests/coding_style.txt
           retention-days: 5

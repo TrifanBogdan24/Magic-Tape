@@ -1,4 +1,4 @@
-name: Run Checker Tests for "main-rs"
+name: Run Checker Tests for "method-rs"
 
 
 on:
@@ -7,14 +7,14 @@ on:
     paths:
       # Workflow runs ONLY if changes are made in the these directories: 
       - 'test_data/**'
-      - 'main-rs/**'
+      - 'method-rs/**'
       - '.github/workflows/**'
   pull_request:
     branches: main
     paths:
       # Workflow runs ONLY if changes are made in the these directories: 
       - 'test_data/**'
-      - 'main-rs/**'
+      - 'method-rs/**'
       - '.github/workflows/**'
 
 jobs:
@@ -29,7 +29,7 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
 
       - name: Run tests on implementation
-        working-directory: ./main-rs/tests
+        working-directory: ./method-rs/tests
         run: |
           chmod +x checker.sh
           ./checker.sh 2>&1 | tee test_results.txt
@@ -40,5 +40,5 @@ jobs:
         with:
           name: checker-logs
           path: |
-            main-rs/tests/test_results.txt
+            method-rs/tests/test_results.txt
           retention-days: 5

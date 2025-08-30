@@ -84,8 +84,8 @@ fiecare rezolvând aceleași cerințe.
 
 Codul sursă este organizat în foldere separate, corespunzătoare fiecărui limbaj de programare:
 
-- [`main-c/`](./main-c/)
-- [`main-rs/`](./main-rs/)
+- [`method-c/`](method-c)
+- [`method-rs/`](method-rs)
 
 
 ## 🧪 GitHub Actions | CI Pipeline
@@ -96,8 +96,8 @@ Codul sursă este organizat în foldere separate, corespunzătoare fiecărui lim
 ori de câte ori se face *push* în repository sau se deschide un *pull request*.
 
 Workflow-urile sunt definite în următoarele fișiere:
-- Pentru implementarea din `main-c`: [.github/workflows/CI-test-main-C.yml](.github/workflows/CI-test-main-C.yml)
-- Pentru `main-rs`: [.github/workflows/CI-test-main-Rust.yml](.github/workflows/CI-test-main-Rust.yml)
+- Pentru implementarea din `method-c`: [.github/workflows/CI-test-method-C.yml](.github/workflows/CI-test-method-C.yml)
+- Pentru `method-rs`: [.github/workflows/CI-test-method-Rust.yml](.github/workflows/CI-test-method-Rust.yml)
 
 
 ## 🌃 Overnight Testing
