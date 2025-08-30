@@ -1,0 +1,85 @@
+name: Run Checker Tests for "main-c"
+
+
+run-name: >
+  ${{ github.event_name == 'schedule'
+      && '🌃 Running Overnight Tests for "main-c"'
+      || (
+        github.event_name == 'push'
+        && format(github.event.head_commit.message)
+        || (
+          github.event_name == 'pull_request'
+          && format(github.event.pull_request.title)
+        )
+      )
+  }}
+
+
+on:
+  push:
+    branches: main
+    paths:
+      # Workflow runs ONLY if changes are made in the these directories: 
+      - 'test_data/**'
+      - 'main-c/**'
+  pull_request:
+    branches: main
+    paths:
+      # Workflow runs ONLY if changes are made in the these directories: 
+      - 'test_data/**'
+      - 'main-c/**'
+
+  schedule:
+    # Overnight: run tests every day at 21:30 UTC
+    # Usage: cron <minute> <hour> <day-of-month> <day-of-week (sunday=0)>
+    - cron: "30 21 * * *"
+
+
+concurrency:
+  # cancels the previous in-flight run in this group
+  group: testing-${{ github.ref }}
+  cancel-in-progress: true
+
+
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Display job purpose
+        run: |
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            echo "🌃 Running Overnight Tests"
+          else
+            echo "🔁 Running CI tests on push/PR"
+          fi
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: "Install dependencies: (valgrind)"
+        run: |
+          sudo apt update
+          sudo apt install -y python3 valgrind
+      
+      - name: Run tests on implementation
+        working-directory: ./main-c/tests
+        run: |
+          chmod +x checker.sh
+          ./checker.sh  2>&1 | tee test_results.txt
+      
+      - name: Run coding style cheker
+        working-directory: ./C-coding-style 
+        run: |
+          chmod +x coding-style/cs.sh
+          coding-style/./cs.sh ../main-c/src/ 2>&1 | tee ../main-c/tests/coding_style.txt
+      
+      - name: Upload test logs as artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: checker-logs
+          path: |
+            ../main-c/tests/test_results.txt
+            ../main-c/tests/coding_style.txt
+          retention-days: 5

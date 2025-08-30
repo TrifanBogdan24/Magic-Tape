@@ -47,7 +47,8 @@ function valgrindTest() {
 }
 
 function testInput() {
-    cat ../tests/Tests/Input/test$1.in > tema1.in
+    
+    cat ../../test_data/Input/test$1.in > tema1.in
     ./tema1 
 
     if [ "$?" -eq 139 ]
@@ -56,7 +57,7 @@ function testInput() {
             return
     fi
 
-    diff ../tests/Tests/Output/test$1.out tema1.out > /dev/null 2>&1
+    diff ../../test_data/Reference/test$1.ref tema1.out > /dev/null 2>&1
     if [ "$?" -ne 0 ]
         then
             echo "test$1.in: 0/${POINTS[$1-1]}"
