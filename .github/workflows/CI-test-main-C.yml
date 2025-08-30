@@ -71,8 +71,8 @@ jobs:
       - name: Run coding style cheker
         working-directory: ./C-coding-style 
         run: |
-          chmod +x coding-style/cs.sh
-          coding-style/./cs.sh ../main-c/src/ 2>&1 | tee ../main-c/tests/coding_style.txt
+          chmod +x cs.sh
+          ./cs.sh ../main-c/src/ 2>&1 | tee ../main-c/tests/coding_style.txt
       
       - name: Upload test logs as artifacts
         if: always()
