@@ -22,12 +22,14 @@ on:
       # Workflow runs ONLY if changes are made in the these directories: 
       - 'test_data/**'
       - 'main-c/**'
+      - '.github/workflows/**'
   pull_request:
     branches: main
     paths:
       # Workflow runs ONLY if changes are made in the these directories: 
       - 'test_data/**'
       - 'main-c/**'
+      - '.github/workflows/**'
 
   schedule:
     # Overnight: run tests every day at 21:30 UTC
@@ -80,6 +82,6 @@ jobs:
         with:
           name: checker-logs
           path: |
-            ../main-c/tests/test_results.txt
-            ../main-c/tests/coding_style.txt
+            main-c/tests/test_results.txt
+            main-c/tests/coding_style.txt
           retention-days: 5
