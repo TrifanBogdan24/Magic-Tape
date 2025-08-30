@@ -8,12 +8,14 @@ on:
       # Workflow runs ONLY if changes are made in the these directories: 
       - 'test_data/**'
       - 'main-rs/**'
+      - '.github/workflows/**'
   pull_request:
     branches: main
     paths:
       # Workflow runs ONLY if changes are made in the these directories: 
       - 'test_data/**'
       - 'main-rs/**'
+      - '.github/workflows/**'
 
 jobs:
   tests:
