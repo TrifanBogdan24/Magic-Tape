@@ -76,6 +76,63 @@ Un exercițiu perfect de logică, algoritmi și gândire „out of the box”.
 - Stivă
 - Coadă
 
+### ⛓️ Banda
+---
+
+> ⚠️ ATENȚIE:
+>
+> **Santinela** este practic un nod plasat la începutul listei;
+> ea nu face parte din informația propriu-zisă și nu poate fi modificată in vreun fel.
+
+
+La începutul programului, banda conține doar santinela,
+urmată de caracterul `#` aflat pe prima celulă, unde se află și degetul.
+
+Caracterul `#` este folosit pentru a marca un nod alocat din bandă,
+asupra căruia nu s-a realizat nicio operație de scriere.
+
+
+### 🚶‍♂️🚶‍♂️🚶‍♂️ Coada
+---
+
+Am implementat **coada** sub forma unei **liste simplu înlănțuite**,
+ce reține ca informație efectivă numele operației de executat.
+
+Pentru simplitate, am ales să construiesc structura de date pentru **coadă** folosind 2 pointeri:
+unul către începutul listei și al doilea către sfârșitul ei.
+
+> 🎯 **Avantaj**: `push()`/`pop()` se realizează in `θ(1)`.
+> 
+> Acestea nu mai necesită iterarea **cozii**, chiar dacă au loc la capete diferite ale ei.
+
+Pe parcurs ce operațiile de tip **UPDATE** sunt citite din fișier,
+acestea sunt adăugate la finalul unei cozii
+pentru a fi executate in viitor, la întâlnirea instrucțiunii `EXECUTE`.
+
+
+### 📚 Stiva
+---
+
+Cele două stive utilizate pentru `UNDO`/`REDO`
+sunt practic două **liste simplu înlănțuite**,
+având ca informație propriu-zisă 
+**pointeri către nodurile prin care degetul s-a deplasat** pe banda magică.
+
+
+> 🎯 Operațiile de `push()`/`pop()` asupra acestora
+> au loc doar la căpatul de început al listei, in `θ(1)`.
+
+Cel mai simplu mod de a înțelege operațiile `UNDO` și `REDO`  
+este să le privim ca pe **săgețile de navigare din istoricul unui browser**.
+
+
+## 📝 Input/Output
+
+Instrucțiunile de executat asupra *"mașinii Turing"* sunt citite și interpretate,
+linie cu linie, dintr-un fișier de intrare `*.in`.
+
+Programul va genera mai apoi un fișier `*.out` care va conține
+mesajele de eroare și rezultatele comenzilor de tip **QUERY**.
 
 ## Implementări multiple
 
@@ -84,8 +141,11 @@ fiecare rezolvând aceleași cerințe.
 
 Codul sursă este organizat în foldere separate, corespunzătoare fiecărui limbaj de programare:
 
-- [`method-c/`](method-c)
-- [`method-rs/`](method-rs)
+
+| Lang. | Working Directory |
+| :---: | :---: |
+| C | [`method-c/`](method-c) |
+| Rust | [`method-rs/`](method-rs) |
 
 
 ## 🧪 GitHub Actions | CI Pipeline
